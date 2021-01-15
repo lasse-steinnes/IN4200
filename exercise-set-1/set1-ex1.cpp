@@ -65,7 +65,7 @@ void Exercise_1::matrix_assign(int rows, int cols){ // assigns an m times n arra
   // dynamic allocation, note the possibility of a flat matrix with size rows*cols
   int **matrix = new int*[rows];
   for (int i = 0; i < rows; i++){
-    matrix[i] = new int[cols]; // filling in columns row by row
+    matrix[i] = new int[cols]; // make columns row by row
   }
 
   // using rand for values to fill in

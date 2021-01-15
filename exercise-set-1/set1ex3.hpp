@@ -4,7 +4,9 @@
 class Exercise_3{
 protected:
 public:
-  void init();
+  void swap(int *a, int *b);
+  int * quicksort(int*arr, int beg, int end);
+  int * quicksort_revised(int *perm, int *arr,int beg, int end);
 
 };
 

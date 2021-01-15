@@ -4,7 +4,7 @@
 // setting up class structure for exercise 1
 class Exercise_1{
 protected:
-  int *m_ptr;
+  int *m_ptr; // member pointer
 
 public:
   void find_lim(int N, double tol); // finding the limit of a sum
