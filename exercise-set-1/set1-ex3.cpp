@@ -2,7 +2,6 @@
 #include "set1ex3.hpp"
 #include <iostream>
 
-//using namespace std;
 
 void Exercise_3::swap(int *a, int *b){
        int t =*a; *a=*b; *b=t;

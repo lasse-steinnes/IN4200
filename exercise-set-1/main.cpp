@@ -3,10 +3,7 @@
 #include "set1ex3.hpp"
 
 #include <iostream>
-//#include <armadillo>
-//#include <stdio.h>
-//#include <cmath>
-//#include <chrono>
+
 
 using namespace std;
 
