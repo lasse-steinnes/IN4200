@@ -156,7 +156,7 @@ int main(int argc, char const *argv[]){
           }
         }
       }
-      // copying content of u over to v; (temp = v, u = temp not needed)
+      // copying content of u over to v;
       temp = v;
       v = u;
       u = temp;
