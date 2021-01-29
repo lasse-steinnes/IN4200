@@ -122,46 +122,23 @@ int main(int argc, char const *argv[]){
     */
 
     printf("Exercise 3-4: Computing with 3D arrays and measure FLOPS rate\n");
-    double *v, *u, *temp; // note working with flat 3D;
+    double *v, *u; // note working with flat 3D;
     int nx = 10, ny = 10, nz = 10;
     int size = nx*ny*nz;
     clock_t  start, t_final;
 
-    //initalizing u to zeroes with calloc
+    //initalizing u and v to zeroes with calloc
     u = (double *)calloc(size, sizeof(double));
-    // initialize v with empty
-    v = (double *)malloc(size *sizeof(double));
+    v = (double *)calloc(size,sizeof(double)); // or malloc
 
     Exercise_3 Solver;
-    v = Solver.allocate(nx,ny,nz); // intializing v as specified
+    u = Solver.allocate(nx,ny,nz); // intializing v as specified
     printf("Initial values set.\n"); // think of u as v_new
-
-    // make the computation and copy (using memcpy)
-    double fraction = 1/6.0;
-
-    int counter = 0;
+    memcpy(v,u, size*sizeof(double));
     int num_iter = 50;
 
     start = clock();
-    while (counter++ < num_iter){
-    for (int i = 1; i < nx-1; i++){
-      for (int j = 1; j < ny-1;j++){
-        for (int  k = 1; k < nz-1; k++){
-          //calculate u
-          u[idx(i,j,k)] = v[idx(i,j,k)] +
-          fraction*(v[idx(i-1,j,k)] + v[idx(i,j-1,k)]
-          + v[idx(i,j,k-1)] - 6*v[idx(i,j,k)]  +
-            v[idx(i+1,j,k)] + v[idx(i,j+1,k)]
-            + v[idx(i,j,k+1)]);
-          }
-        }
-      }
-      // copying content of u over to v;
-      temp = v;
-      v = u;
-      u = temp;
-      //new iteration
-    }
+    Solver.solve(nx,ny,nz,num_iter,u,v);
     t_final = clock() - start;
 
     int num_flops = 9*num_iter*(nx-2)*(ny-2)*(nz-2);
@@ -175,6 +152,7 @@ int main(int argc, char const *argv[]){
     delete [] v; // calloc assigned pointer
     delete [] u; // pointer assigned with malloc/could also use new
     //delete [] temp; // note that it wouldn't delete this one for some reason
+    // before I set it in solve 
   }
   return 0;
 }
