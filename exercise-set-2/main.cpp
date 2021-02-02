@@ -67,10 +67,10 @@ int main(int argc, char const *argv[]){
 
     free(data);
 
-    printf("Time elapsed writing to ASCII file: %lu ms.\n", CLOCKS_TO_MILLISEC(ascii_write_timer));
-    printf("Time elapsed writing to binary file: %lu ms.\n", CLOCKS_TO_MILLISEC(bin_write_timer));
-    printf("Time elapsed reading from ASCII file: %lu ms.\n", CLOCKS_TO_MILLISEC(ascii_read_timer));
-    printf("Time elapsed reading from binary file: %lu ms.\n", CLOCKS_TO_MILLISEC(bin_read_timer));
+    printf("Time elapsed writing to ASCII file: %.2lf ms.\n", CLOCKS_TO_MILLISEC(ascii_write_timer));
+    printf("Time elapsed writing to binary file: %.2lf ms.\n", CLOCKS_TO_MILLISEC(bin_write_timer));
+    printf("Time elapsed reading from ASCII file: %.2lf ms.\n", CLOCKS_TO_MILLISEC(ascii_read_timer));
+    printf("Time elapsed reading from binary file: %.2lf ms.\n", CLOCKS_TO_MILLISEC(bin_read_timer));
     cout << "It takes LESS time with binary files, but they are unreadable for humans. \n";
   }
 
@@ -145,14 +145,14 @@ int main(int argc, char const *argv[]){
 
     printf("Using a %d x %d x %d grid, and %d time steps.\n", nx, ny, nz, num_iter);
     printf("Performing %lu floating point operations.\n", num_flops);
-    printf("time: %lu, number of FLOPS/sec: %f \n",CLOCKS_TO_MILLISEC(t_final), \
+    printf("time: %.2lf, number of FLOPS/sec: %lf \n",CLOCKS_TO_MILLISEC(t_final), \
               num_flops/CLOCKS_TO_MILLISEC(t_final));
 
     // deallocate
     delete [] v; // calloc assigned pointer
     delete [] u; // pointer assigned with malloc/could also use new
     //delete [] temp; // note that it wouldn't delete this one for some reason
-    // before I set it in solve 
+    // before I set it in solve
   }
   return 0;
 }
