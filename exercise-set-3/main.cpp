@@ -3,7 +3,7 @@
 #include <iostream>
 #include <math.h>
 #include <x86intrin.h>
-#include <time.h>
+#include <time.h> // time and clock_t
 using namespace std;
 
 #define CLOCKS_TO_MILLISEC(t) (t*1000)/((double )CLOCKS_PER_SEC) // note how you can define
@@ -38,7 +38,7 @@ int main(int argc, char const *argv[]){
       }
       /*
       Read Time-Stamp Counter;
-      this return numbers of clock cycles
+      this return numbers of clock cycles uses x86 intrin
       */
       //lets assume no cache misses and most flops --> n_div
       // so latency assumes outstanding prefetches
