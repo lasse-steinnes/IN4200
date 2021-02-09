@@ -84,16 +84,18 @@ int main(int argc, char const *argv[]){
      }
      end_stride = clock();
      double time_st = CLOCKS_TO_SEC(end_stride-start_stride);
-     double FP2 = ((double) N)/((stride + 0.5)*time_st);
+     double FP2 = (int)(N/(double) stride + 0.5)/(double) time_st;
 
      // free dynamic memory
      delete [] A;
      delete [] B;
 
+     // note that the + 0.5 is so that we round up
+     // the standard for c is to round down
      printf("\n");
      printf("Runtime: %2.f ms \n",time_st*1000);
-     printf("Realistically achievable bandwith: %.2e [byte/sec]\n", ((double) n_bytes/(stride+0.5))/time_st);
-     printf("In words/sec: %.2e \n",2*N/((double) (stride + 0.5)*time_st));
+     printf("Realistically achievable bandwith: %.2e [byte/sec]\n", (int)(n_bytes/(double) stride+0.5)/(double) time_st);
+     printf("In words/sec: %.2e \n",2* (int) (N/(double) stride + 0.5)/(double) time_st);
      printf("FLOPS/sec %2.e \n",FP2);
      printf("FLOPS/sec is a lot (!) lower with strided access, ratio %.2f \n",FP2/FP1);
   }
@@ -146,7 +148,7 @@ int main(int argc, char const *argv[]){
     double time_ = CLOCKS_TO_SEC(end - start);
     double time_un = CLOCKS_TO_SEC(end_unroll - start_unroll);
     printf("Speedup with unroll: %.2f \n", time_un/time_);
-    printf("Note: Using a temporal storage for C is more efficient than unrolling \n");
+    printf("Note: Using a temporal storage for C can be more efficient than unrolling \n");
 
     delete [] res;
     delete [] res2;
