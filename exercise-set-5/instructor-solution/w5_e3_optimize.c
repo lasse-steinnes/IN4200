@@ -122,7 +122,8 @@ void foofaster (int N, double **mat, double **s, int *v)
     // Table of possible values. This should really be constructed once,
     // outside the scope of this function.
     for (int i = 0; i < 256; i++) {
-        val[i] = -cos(2.0*i);
+        val[i] = -cos(2.0*i); // note that i is the possible modulo value of
+                              //v[i]%256
     }
     // Table matching values of v to values in val.
     for (size_t i = 0; i < N; i++) {
