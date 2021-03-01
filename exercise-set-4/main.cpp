@@ -148,8 +148,8 @@ int main(int argc, char const *argv[]){
     double time_ = CLOCKS_TO_SEC(end - start);
     double time_un = CLOCKS_TO_SEC(end_unroll - start_unroll);
     printf("Speedup with unroll: %.2f \n", time_un/time_);
-    printf("Note: Using a temporal storage for C can be more efficient than unrolling \n");
-
+    //printf("Note: Using a temporal storage for C can be more efficient than unrolling \n");
+    // not sure if this comment was false or not
     delete [] res;
     delete [] res2;
     delete [] A;
@@ -158,8 +158,8 @@ int main(int argc, char const *argv[]){
 
   if (exercise == 3){
     #pragma omp parallel
-      std::cout << "Current thread number: " << omp_get_thread_num() << std::endl;
-      std::cout << "Hello, World!" << std::endl;
+      cout << "Current thread number: " << omp_get_thread_num() << "\n";
+      cout << "Hello, World! \n" << endl;
   }
   return 0;
 }
