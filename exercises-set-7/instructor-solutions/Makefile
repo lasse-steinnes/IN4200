@@ -1,4 +1,4 @@
-CC := gcc
+CC := g++-10
 FLAGS = -Wall
 
 PROGRAMS = $(patsubst %.c,%.exe,$(wildcard *.c))
