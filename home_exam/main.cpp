@@ -31,6 +31,7 @@ int main(int argc, char const *argv[]){
       cout << "Storing CNN as 2D matrix \n \n";
       char **table2D;
       Solver.read_graph_from_file1(filename,N,&table2D);
+
       printf("\n");
       printf("Connectivity graph of 10 first nodes \n");
       printf("--------------------\n");
@@ -49,6 +50,22 @@ int main(int argc, char const *argv[]){
       cout << "Storing CNN as CRS \n \n";
       int *row_ptr , *col_idx;
       Solver.read_graph_from_file2(filename, N, &row_ptr, &col_idx);
+
+
+      printf("\n");
+      printf("CRS storage of 5 nodes \n");
+      printf("--------------------\n");
+      for (int i = 0; i < 370; i++){
+          printf("%d ", col_idx[i]);
+        }
+        printf("[............] \n");
+        printf("-------------------- \n");
+
+        printf("\n");
+        for (int i = 0; i < 10; i++){
+            printf("%d ", row_ptr[i]);
+          }
+        printf("\n");
     }
 
   }

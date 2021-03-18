@@ -118,6 +118,12 @@ int main(int argc, char const *argv[]){
 
       perm = Solver.quicksort_revised(indices,arr,0,n);
 
+      cout << "indices\n";
+      for (int i = 0 ; i < n; i++){
+        cout << indices[i] << " ";
+      }
+      cout << "\n"; //node, doesn't really need to return perm
+
       cout << "permutated indices\n";
       for (int i = 0 ; i < n; i++){
         cout << perm[i] << " ";
