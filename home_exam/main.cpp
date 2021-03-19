@@ -10,15 +10,8 @@
 using namespace std;
 
 int main(int argc, char const *argv[]){
-  int exercise;
-  cout << "Press 1 to read off text file \n";
-  cout << "Press 2 to output shared nearest neighbours\n";
-  cout << "Press 3 to find clusters \n";
-  cout << "Enter number:" << " ";
-  cin >> exercise;
 
-  if (exercise == 1){
-    // test reading off txt-file
+    // read off text file
     int stype;
     cout << "Choose storage type 2D/CRS (1/2):" << " ";
     cin >> stype;
@@ -43,6 +36,12 @@ int main(int argc, char const *argv[]){
       }
         printf("[............] \n");
         printf("-------------------- \n");
+
+        //create 2D SNN graph
+        printf("\n");
+        printf("Creating 2D SNN graph:\n");
+        int **SNN_table;
+        Solver.create_SNN_graph1(*N,table2D,&SNN_table);
       }
 
 
@@ -53,26 +52,26 @@ int main(int argc, char const *argv[]){
 
 
       printf("\n");
-      printf("CRS storage of 5 nodes \n");
-      printf("--------------------\n");
-      for (int i = 0; i < 370; i++){
+      printf("CRS storage sample \n");
+      printf("------------------------------------------\n");
+      printf("col_idx: ");
+      for (int i = 0; i < 10; i++){
           printf("%d ", col_idx[i]);
         }
-        printf("[............] \n");
-        printf("-------------------- \n");
-
-        printf("\n");
+        printf("[...] \n");
+        printf("row_ptr: ");
         for (int i = 0; i < 10; i++){
             printf("%d ", row_ptr[i]);
           }
-        printf("\n");
+        printf("[...] \n");
+        printf("------------------------------------------\n");
     }
 
-  }
 
-  if (exercise == 0 || exercise > 3){ // || is the same as or
-    cout << "Wrong usage, choose correct task number \n";
-    return 1;
-  }
+  if (stype == 0 || stype > 2){ // || is the same as or
+   cout << "Wrong usage, choose correct task option (1/2)!\n";
+   return 1;
+    }
+
   return 0;
 }
