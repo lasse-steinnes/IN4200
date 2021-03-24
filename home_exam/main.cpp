@@ -98,8 +98,8 @@ int main(int argc, char const *argv[]){
 
         // checking if node is within cluster, and printing other nodes
         printf("Investigate existence of cluster\n");
-        int node_id = 0;
-        int tau = 2;
+        int node_id = 2;
+        int tau = 3;
         Solver.check_node(node_id,tau, *N,row_ptr, col_idx,SNN_val);
     }
 
