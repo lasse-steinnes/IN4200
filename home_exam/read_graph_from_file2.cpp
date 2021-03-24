@@ -61,7 +61,7 @@ void Shared_NN::read_graph_from_file2 (char *filename, int *N, int **row_ptr,int
         }
       }
 
-      int sum = 0;
+      int sum = 0; // better to have these in two or one loop? see create SNN gr1
       for (int i = 0; i < nodes;i++){
         for (int j = 0; j < nodes;j++){
           if(temp[i*nodes+j] == 1){
