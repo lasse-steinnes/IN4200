@@ -28,25 +28,26 @@ void Shared_NN::check_node(int node_id, int tau, int N, int *row_ptr, int *col_i
   while (in_queue == true){
       int i = 0;
       int k = 0;
+      //cout << "here" << "\n";
     // enter the adjacent nodes and check if they uphold tau
       while(queue[i] != -1){
         //cout << "q " << queue[i];
         // access the node in queue
         q = queue[i];
         queue[i] = -1; // "delete" the node in queue[i]
-
-        cout << "check nodes edged to " << q << "\n";
+        //cout << " " << i << "\n";
+        //cout << "check nodes edged to " << q << "\n";
         for (int j = row_ptr[q]; j < row_ptr[q+1]; j++){
           discovered_node = col_idx[j];
           if (SNN_val[j] >= tau and cluster[discovered_node] == 0){
             cluster[discovered_node] = 1; // storing nodes belonging to cluster
             queue[k] = discovered_node; // filling up next qeue with nodes, starting from index 0;
-            cout << "add to queue " << discovered_node  << "\n";
+            //cout << "add to queue " << discovered_node  << "\n";
             k++;
           }
         }
-        cout << "q " << queue[0] << "\n";
-        cout << "\n";
+        //cout << "q " << queue[0] << "\n";
+        //cout << "\n";
         i++;
     }
     // checking if there are any nodes in queue;
@@ -57,9 +58,11 @@ void Shared_NN::check_node(int node_id, int tau, int N, int *row_ptr, int *col_i
 
   // print out nodes in cluster
   // initialize to zeroes and -1
+  cout << "node id/search key: " << node_id << "  tau:" << tau <<  "\n";
+  cout << "In cluster with: \n";
   for (int i = 0; i < N; i++){
-      if (cluster[i] == 1){
-      printf("Node %d in cluster \n",i);
+      if (cluster[i] == 1 and i != node_id){
+      printf("Node %d \n",i);
     }
   }
 
