@@ -21,20 +21,6 @@ void Shared_NN::read_graph_from_file1(char *filename, int *N, char ***table2D){
 
   FILE *asciifile; // pointer to a file stream
 
-  // Allocate dynamic memory by dereferencing (or use nodes from reading off)
-  *table2D = (char**) malloc((*N) * sizeof *table2D); // dyn. allocate rows
-  for (size_t i = 0; i < (*N); i++) { // dyn. allocate cols
-      (*table2D)[i] = (char*) malloc((*N) * sizeof (*table2D)[0]);
-  }
-
-  // filling in zeroes
-  for (int i = 0; i < (*N); i++){
-    for (int j = 0; j < (*N); j++){
-      (*table2D)[i][j] = '0';
-    }
-  }
-
-
   string dir = "./data/";
   dir.append(filename);
   dir.append(".txt");
@@ -59,6 +45,19 @@ void Shared_NN::read_graph_from_file1(char *filename, int *N, char ***table2D){
     fgets(line,sizeof(line),asciifile); // jump over this line
     printf("Attributes of SNN data || Nodes:%d | Edges:%d \n",nodes, edges);
 
+    *N = nodes;
+    // Allocate dynamic memory by dereferencing (or use nodes from reading off)
+    *table2D = (char**) malloc((*N) * sizeof *table2D); // dyn. allocate rows
+    for (size_t i = 0; i < (*N); i++) { // dyn. allocate cols
+        (*table2D)[i] = (char*) malloc((*N) * sizeof (*table2D)[0]);
+    }
+
+    // filling in zeroes
+    for (int i = 0; i < (*N); i++){
+      for (int j = 0; j < (*N); j++){
+        (*table2D)[i][j] = '0';
+      }
+    }
   // loop over lines
     int from_node,to_node;
     int assigned;

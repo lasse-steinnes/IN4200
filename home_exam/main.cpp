@@ -11,14 +11,12 @@ using namespace std;
 
 int main(int argc, char const *argv[]){
 
-      int *N; int nodes = 5; N = &nodes;
+      int N;
       char *filename = "face_x";
       int x = 5;
 
-      //int *N; int nodes = 4039; N = &nodes; //4039
       //char *filename = "facebook_combined"; //  "facebook_combined";
       //int x = 10;
-
 
     // read off text file
     int stype;
@@ -31,7 +29,7 @@ int main(int argc, char const *argv[]){
     if (stype == 1){
       cout << "Storing CNN as 2D matrix \n \n";
       char **table2D;
-      Solver.read_graph_from_file1(filename,N,&table2D);
+      Solver.read_graph_from_file1(filename,&N,&table2D);
 
       printf("\n");
       printf("Connectivity graph of %d first nodes \n",x);
@@ -49,7 +47,7 @@ int main(int argc, char const *argv[]){
         printf("\n");
         printf("Creating 2D SNN graph:\n");
         int **SNN_table;
-        Solver.create_SNN_graph1(*N,table2D,&SNN_table);
+        Solver.create_SNN_graph1(N,table2D,&SNN_table);
 
         printf("\n");
         printf("SNN graph of %d first nodes \n",x);
@@ -68,7 +66,7 @@ int main(int argc, char const *argv[]){
     if (stype == 2){
       cout << "Storing CNN as CRS \n \n";
       int *row_ptr , *col_idx;
-      Solver.read_graph_from_file2(filename, N, &row_ptr, &col_idx);
+      Solver.read_graph_from_file2(filename, &N, &row_ptr, &col_idx);
 
 
       printf("\n");
@@ -90,7 +88,7 @@ int main(int argc, char const *argv[]){
         printf("\n");
         printf("Creating CRS SNN graph:\n");
         int *SNN_val;
-        Solver.create_SNN_graph2(*N,row_ptr,col_idx, &SNN_val);
+        Solver.create_SNN_graph2(N,row_ptr,col_idx, &SNN_val);
 
         // printf("\n");
         printf("SNN graph for first nodes \n");
@@ -106,10 +104,11 @@ int main(int argc, char const *argv[]){
         // checking if node is within cluster, and printing other nodes
         printf("Investigate existence of cluster\n");
         printf("------------------------------------------\n");
-        int node_id = 2;
+        int node_id = 3;
         int tau = 1;
-        Solver.check_node(node_id,tau, *N,row_ptr, col_idx,SNN_val);
+        Solver.check_node(node_id,tau, N,row_ptr, col_idx,SNN_val);
         printf("------------------------------------------\n");
+
     }
 
   // exception handling
@@ -117,6 +116,5 @@ int main(int argc, char const *argv[]){
    cout << "Wrong usage, choose correct task option (1/2)!\n";
    return 1;
     }
-
   return 0;
 }

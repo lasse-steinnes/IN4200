@@ -13,7 +13,6 @@ void Shared_NN::create_SNN_graph1(int N, char **table2D, int ***SNN_table){
   // -----------------------------------------
    // allocate memory and objects
    //-----------------------------------------
-
   // allocate memory for SNN_table
   *SNN_table = (int**) malloc(N * sizeof *SNN_table); // dyn. allocate rows
   for (size_t i = 0; i < N; i++) { // dyn. allocate cols
@@ -75,4 +74,6 @@ void Shared_NN::create_SNN_graph1(int N, char **table2D, int ***SNN_table){
 }
 //end algo
   // -----------------------------------------------------
+  free(len);
+  free(compact);
   }
