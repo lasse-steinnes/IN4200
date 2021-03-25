@@ -2,14 +2,17 @@
 
 using namespace std;
 void Shared_NN::create_SNN_graph1(int N, char **table2D, int ***SNN_table){
-  /*Creates an SNN graph
+  /*Creates a 2D SNN graph
+
   Input:
   - N: number of nodes
   - table 2D: a connectivity "grap"
-  - SNN_table: SNN graph to be allocated
-
-  int x = character - '0';  // converting chars to integers (from ascii table)
+  - SNN_table: 2D SNN graph to be allocated
   */
+
+  // -----------------------------------------
+   // allocate memory and objects
+   //-----------------------------------------
 
   // allocate memory for SNN_table
   *SNN_table = (int**) malloc(N * sizeof *SNN_table); // dyn. allocate rows
@@ -24,22 +27,25 @@ void Shared_NN::create_SNN_graph1(int N, char **table2D, int ***SNN_table){
     }
   }
 
-  //int cols = 2;
-  int *compact = (int *) malloc((N*N) * sizeof(*compact)); // dyn. allocate
-  int *len = (int *) calloc(N+1, sizeof(*len)); // dyn. allocate
   // compact holds the node connection (to_node)
+  int *compact = (int *) malloc((N*N) * sizeof(*compact)); // dyn. allocate
   // len holds the information (from_node, in form  an index list)
+  int *len = (int *) calloc(N+1, sizeof(*len)); // dyn. allocate
+  // basically len corresponds to row_ptr and
+  // compact refers to col_idx, but we don't know number of edges, so
+  // allocate memory for the largest possible dimension N*N (not 2*edges)
 
-  // Now count number of shared neighbours, between direct neighbours i and j
-  // filling in zeroes // avoid looping over
-  int sum_ones = 0; // make length of non-zeros in row i
+
+  // Store information in compact notation
+  // --> avoid nested if statements and 0 hits
+  // when counting SNNs
+  int sum_ones = 0;
   int ind = 0;
   int idx;
   for (int i = 0; i < N; i++){
     for (int j = 0; j < N; j++){
         if (table2D[i][j] == '1'){
           compact[ind] = j;
-          //compact[ind*cols+1] = j;
           sum_ones+=1;
           ind += 1;
         }
@@ -47,40 +53,26 @@ void Shared_NN::create_SNN_graph1(int N, char **table2D, int ***SNN_table){
       len[i+1] = sum_ones;
     }
 
-    /*
-    // test output
-    for (int i = 345; i < 380; i++){
-            cout << compact[i] << " ";
-            cout << "\n";
-        }
-    */
-    // begins at len 1
-    /*cout << "first node to " << compact[0*cols + 1] << "\n";
-    cout << "first node from " << compact[0*cols + 0] << "\n";
-    cout << "first index (row) (at first node from)" << len[1] <<  "\n";
-    cout << "next index in for compact (corr to next node from)" << len[1] << "\n";
-    cout << "last node to " << compact[(len[N]-1)*cols +1] << "\n";
-    cout << "last node from" << compact[(len[N]-1)*cols] << "\n";
-    cout << "len[N]-1 last index from " <<  len[N]-1 << "\n";
-    */
-    // find the shard nearest neighbours
-    // avoid all the zeros and double ifs
-
-    int to_n, from_n, shared_node, z,z2;
-    for (int k = 0; k < N ;k++){
-      z = len[k];
-      z2 = len[k+1];
-      //from_n = compact[z*cols]; // the two we will check if having shared nodes
-      for (int m = z; m < z2;m++){// for each to_n
-        to_n = compact[m];
-        for (int j = z; j < z2; j++){
-          shared_node = compact[j]; // looping over to nodes belonging to from_n
-          for (int i = len[to_n]; i < len[to_n+1];i++){
-            if (compact[i] == shared_node){ // checking if tonodes is shared
-              (*SNN_table)[k][to_n] += 1; // sparse arrray
-          }
+  // -----------------------------------------
+   // Begin algorithm
+   //-----------------------------------------
+  //  Count number of shared neighbours, between direct neighbours i and j
+  int to_n, shared_node, z,z2;
+  for (int k = 0; k < N ;k++){ // loop over all nodes
+    z = len[k];                // z indices range to access nodes egded
+    z2 = len[k+1];            //  to node k in compact array
+    for (int m = z; m < z2;m++){ // loop over indices to access edged node
+      to_n = compact[m];
+      for (int j = z; j < z2; j++){ // for each edged node belonging to k
+        shared_node = compact[j]; // loop over other nodes connected to k
+        for (int i = len[to_n]; i < len[to_n+1];i++){ // loop over nodes connected to edged node
+          if (compact[i] == shared_node){ // checking if edged node and k has shared NNs
+            (*SNN_table)[k][to_n] += 1; // Add to 2D table if shared (possibly sparse)
         }
       }
     }
   }
+}
+//end algo
+  // -----------------------------------------------------
   }

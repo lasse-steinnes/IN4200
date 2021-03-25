@@ -11,15 +11,21 @@ using namespace std;
 
 int main(int argc, char const *argv[]){
 
+      int *N; int nodes = 5; N = &nodes;
+      char *filename = "face_x";
+      int x = 5;
+
+      //int *N; int nodes = 4039; N = &nodes; //4039
+      //char *filename = "facebook_combined"; //  "facebook_combined";
+      //int x = 10;
+
+
     // read off text file
     int stype;
-    cout << "Choose storage type 2D/CRS (1/2):" << " ";
+    cout << "Choose storage type 2D/CRS (1/2): ";
     cin >> stype;
 
-    int *N; int nodes = 5; N = &nodes; //4039
-    char *filename = "face_x"; //  "facebook_combined";
-    //int *N; int nodes = 4039; N = &nodes; //4039
-    //char *filename = "facebook_combined"; //  "facebook_combined";
+
     Shared_NN Solver;
 
     if (stype == 1){
@@ -28,10 +34,10 @@ int main(int argc, char const *argv[]){
       Solver.read_graph_from_file1(filename,N,&table2D);
 
       printf("\n");
-      printf("Connectivity graph of 10 first nodes \n");
+      printf("Connectivity graph of %d first nodes \n",x);
       printf("--------------------\n");
-      for (int i = 0; i < 5; i++){
-        for (int j = 0; j < 5; j++){
+      for (int i = 0; i < x; i++){
+        for (int j = 0; j < x; j++){
           printf("%c ", table2D[i][j]);
         }
         cout << "\n";
@@ -46,10 +52,10 @@ int main(int argc, char const *argv[]){
         Solver.create_SNN_graph1(*N,table2D,&SNN_table);
 
         printf("\n");
-        printf("SNN graph of 10 first nodes \n");
+        printf("SNN graph of %d first nodes \n",x);
         printf("--------------------\n");
-        for (int i = 0; i < 5; i++){
-          for (int j = 0; j < 5; j++){
+        for (int i = 0; i < x; i++){
+          for (int j = 0; j < x; j++){
             printf("%d ", SNN_table[i][j]);
           }
           cout << "\n";
@@ -87,7 +93,7 @@ int main(int argc, char const *argv[]){
         Solver.create_SNN_graph2(*N,row_ptr,col_idx, &SNN_val);
 
         // printf("\n");
-        printf("SNN graph for 10 first nodes \n");
+        printf("SNN graph for first nodes \n");
         printf("------------------------------------------\n");
           for (int i = 0;  i < 16;i++){
             printf("%d ", SNN_val[i]);
@@ -95,14 +101,18 @@ int main(int argc, char const *argv[]){
           }
         printf("[...] \n");
         printf("------------------------------------------\n");
+        printf("\n");
 
         // checking if node is within cluster, and printing other nodes
         printf("Investigate existence of cluster\n");
-        int node_id = 4;
+        printf("------------------------------------------\n");
+        int node_id = 2;
         int tau = 1;
         Solver.check_node(node_id,tau, *N,row_ptr, col_idx,SNN_val);
+        printf("------------------------------------------\n");
     }
 
+  // exception handling
   if (stype == 0 || stype > 2){ // || is the same as or
    cout << "Wrong usage, choose correct task option (1/2)!\n";
    return 1;

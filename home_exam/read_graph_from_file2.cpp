@@ -3,14 +3,24 @@
 using namespace std;
 
 void Shared_NN::read_graph_from_file2 (char *filename, int *N, int **row_ptr,int **col_idx){
-  /*
-  inputs are all pointers
+  /* Function which reads of a txt file and stores information in row_ptr and col_idx.
+  txt-file has ascii format
+  "
+  # Undirected graph: facebook_combined.txt
+  # A connectivity graph representing social circles from Facebook
+  # Nodes: 5 Edges: 8
+  # FromNodeId    ToNodeId
+  0 1
+  0 2
+  [...]"
+
+  Inputs are all pointers
   - filename of txt file.
   - N: number of nodes
   - arrays for connectivity graphs
       - row_ptr: number of accumulative connections (length nodes + 1)
       - col_idx: in range row_ptr[i],row_ptr[i+1]-1 lists nodes connected
-        to node i (length 2*connections)
+        to node i (length 2*connections) (connections = edges)
   */
 
   FILE *asciifile; // pointer to a file stream

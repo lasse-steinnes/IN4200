@@ -2,8 +2,18 @@
 
 using namespace std;
 void Shared_NN::read_graph_from_file1(char *filename, int *N, char ***table2D){
-  /*
-  inputs are all pointers
+  /* Function which reads of a txt file and stores information in table2D.
+  txt-file has ascii format
+  "
+  # Undirected graph: facebook_combined.txt
+  # A connectivity graph representing social circles from Facebook
+  # Nodes: 5 Edges: 8
+  # FromNodeId    ToNodeId
+  0 1
+  0 2
+  [...]"
+
+  Inputs are all pointers
   - filename of txt file.
   - N: number of nodes
   - 2D table for connectivity graph of nearest neighbours NN (address &tabel2D)
@@ -12,8 +22,6 @@ void Shared_NN::read_graph_from_file1(char *filename, int *N, char ***table2D){
   FILE *asciifile; // pointer to a file stream
 
   // Allocate dynamic memory by dereferencing (or use nodes from reading off)
-
-
   *table2D = (char**) malloc((*N) * sizeof *table2D); // dyn. allocate rows
   for (size_t i = 0; i < (*N); i++) { // dyn. allocate cols
       (*table2D)[i] = (char*) malloc((*N) * sizeof (*table2D)[0]);
