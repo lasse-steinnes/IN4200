@@ -93,11 +93,27 @@ void Shared_NN::read_graph_from_file2 (char *filename, int *N, int **row_ptr,int
         }
       }
 
-      // loop over edges
-      for (int i = 0; i < edges;i++){
+      // loop over edges with loop unroll
+      int stride = 4; // low to avoid loop overhead
+      int remaind = edges%stride; // remainder after loop
+      for (int i = 0; i < edges-remaind;i+=stride){
         sum[from[i]+1] += 1;
         sum[to[i]+1] += 1;
+        sum[from[i+1]+1] += 1;
+        sum[to[i+1]+1] += 1;
+        sum[from[i+2]+1] += 1;
+        sum[to[i+2]+1] += 1;
+        sum[from[i+3]+1] += 1;
+        sum[to[i+3]+1] += 1;
       }
+
+      // handle remainder
+      if (remaind != 0){
+        for (int i = edges-remaind; i < edges;i++){
+          sum[from[i]+1] += 1;
+          sum[to[i]+1] += 1;
+          }
+        }
 
       // fill in row_ptr
       int cum_sum = 0;
@@ -117,14 +133,33 @@ void Shared_NN::read_graph_from_file2 (char *filename, int *N, int **row_ptr,int
       }
       free(to);
       free(from);
+      free(indx);
 
       // then sort for each from node using quicksort
-      int beg, end;
-      for (int i = 0; i < nodes;i++){
+      // assuming this would be beneficial to avoid strided access in
+      // further analysis
+      int beg,end,end2,end3,end4;
+      remaind = nodes%stride;
+      for (int i = 0; i < nodes-remaind;i+=stride){ // still stride = 4
           // sort
           beg = (*row_ptr)[i];
           end = (*row_ptr)[i+1];
+          end2 = (*row_ptr)[i+2];
+          end3 =  (*row_ptr)[i+3];
+          end4 =  (*row_ptr)[i+4];
           quicksort(*col_idx,beg,end);
+          quicksort(*col_idx,end,end2);
+          quicksort(*col_idx,end2,end3);
+          quicksort(*col_idx,end3,end4);
+        }
+
+      // sort remainder
+      if (remaind != 0){
+        for (int i = nodes-remaind; i < nodes;i++){
+          beg = (*row_ptr)[i];
+          end = (*row_ptr)[i+1];
+          quicksort(*col_idx,beg,end);
+          }
         }
       }
 

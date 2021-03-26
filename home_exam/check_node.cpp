@@ -25,7 +25,7 @@ void Shared_NN::check_node(int node_id, int tau, int N, int *row_ptr, int *col_i
   // -1 means empty "slot",  assuming no nodes hold negative values
   int *queue = (int *) malloc(N * sizeof(*queue));
 
-  // initialize to zeroes and -1
+  // initialize to zeroes and -1, with loop unrolling
   for (int i = 0; i < N; i++){
       cluster[i] = 0;
       queue[i] = -1;
@@ -79,10 +79,23 @@ void Shared_NN::check_node(int node_id, int tau, int N, int *row_ptr, int *col_i
   cout << "node id/search key: " << node_id << "  tau:" << tau <<  "\n";
   printf("------------------------------------------\n");
   cout << "In cluster with: \n";
-  for (int i = 0; i < N; i++){
+  int stride = 4;
+  int remaind = N%stride; // remainder after loop
+  for (int i = 0; i < N; i+=stride){ // with unroll
       if (cluster[i] == 1 and i != node_id){
       printf("Node %d \n",i);
+      }
+      if (cluster[i+1] == 1 and i+1 != node_id){
+      printf("Node %d \n",i+1);
+      }
+      if (cluster[i+2] == 1 and i+2 != node_id){
+      printf("Node %d \n",i+2);
+      }
+      if (cluster[i+3] == 1 and i+3 != node_id){
+      printf("Node %d \n",i+3);
+      }
     }
-  }
+
+    // print remainder
 
 };

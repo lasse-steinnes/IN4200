@@ -52,12 +52,28 @@ void Shared_NN::read_graph_from_file1(char *filename, int *N, char ***table2D){
         (*table2D)[i] = (char*) malloc((*N) * sizeof (*table2D)[0]);
     }
 
-    // filling in zeroes
+    // filling in zeroes with loop unrolling over columns (avoid strided access)
+    int stride = 4;
+    int remaind = (*N)%stride; // remainder after loop
     for (int i = 0; i < (*N); i++){
-      for (int j = 0; j < (*N); j++){
+      for (int j = 0; j < (*N)-remaind; j+= stride){
+        (*table2D)[i][j] = '0';
+        (*table2D)[i][j+1] = '0';
+        (*table2D)[i][j+2] = '0';
+        (*table2D)[i][j+3] = '0';
+      }
+    }
+
+  // fill in for the remainder
+  // remainder calculation
+  if (remaind != 0){
+  for (size_t i = 0; i < *N; i++){ // rows
+    for (size_t j = (*N)-remaind; j < (*N);j++){ // columns
         (*table2D)[i][j] = '0';
       }
     }
+  }
+
   // loop over lines
     int from_node,to_node;
     int assigned;

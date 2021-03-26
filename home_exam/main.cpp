@@ -12,11 +12,11 @@ using namespace std;
 int main(int argc, char const *argv[]){
 
       int N;
-      char *filename = "face_x";
-      int x = 5;
+      //char *filename = "face_x";
+      //int x = 5;
 
-      //char *filename = "facebook_combined"; //  "facebook_combined";
-      //int x = 10;
+      char *filename = "facebook_combined"; //  "facebook_combined";
+      int x = 10;
 
     // read off text file
     int stype;
@@ -46,6 +46,7 @@ int main(int argc, char const *argv[]){
         //create 2D SNN graph
         printf("\n");
         printf("Creating 2D SNN graph:\n");
+        printf("Max threads available for work: %d \n", omp_get_max_threads());
         int **SNN_table;
         Solver.create_SNN_graph1(N,table2D,&SNN_table);
 
@@ -87,10 +88,11 @@ int main(int argc, char const *argv[]){
         // create SNN graph type 2
         printf("\n");
         printf("Creating CRS SNN graph:\n");
+        printf("Max threads available for work: %d \n", omp_get_max_threads());
         int *SNN_val;
         Solver.create_SNN_graph2(N,row_ptr,col_idx, &SNN_val);
 
-        // printf("\n");
+        printf("\n");
         printf("SNN graph for first nodes \n");
         printf("------------------------------------------\n");
           for (int i = 0;  i < 16;i++){
@@ -101,14 +103,27 @@ int main(int argc, char const *argv[]){
         printf("------------------------------------------\n");
         printf("\n");
 
-        // checking if node is within cluster, and printing other nodes
+        //user input search key and treshold:
         printf("Investigate existence of cluster\n");
+        printf("\n");
+        int node_id,tau;
+        cout << "Choose search key (node_id) [0-"<< N-1 <<"], (int): ";
+        cin >> node_id;
+
+        // exception handling
+        // Note: Assuming that node_id between 0 to N-1;
+        if (node_id >= N){
+         cout << "Wrong usage, choose search key node_id < N!\n";
+         return 1;
+          }
+
+        cout << "Choose threshold for cluster, tau (int): ";
+        cin >> tau;
+
+        // checking if node is within cluster, and printing other nodes
         printf("------------------------------------------\n");
-        int node_id = 3;
-        int tau = 1;
         Solver.check_node(node_id,tau, N,row_ptr, col_idx,SNN_val);
         printf("------------------------------------------\n");
-
     }
 
   // exception handling
