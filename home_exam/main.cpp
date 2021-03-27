@@ -24,12 +24,15 @@ int main(int argc, char const *argv[]){
     cin >> stype;
 
 
-    Shared_NN Solver;
+    Shared_NN Solver; // create instance
+    clock_t begin_read,end_read, begin_graph, end_graph;
 
     if (stype == 1){
       cout << "Storing CNN as 2D matrix \n \n";
       char **table2D;
+      begin_read = clock();
       Solver.read_graph_from_file1(filename,&N,&table2D);
+      end_read = clock() - begin_read;
 
       printf("\n");
       printf("Connectivity graph of %d first nodes \n",x);
@@ -48,7 +51,9 @@ int main(int argc, char const *argv[]){
         printf("Creating 2D SNN graph:\n");
         printf("Max threads available for work: %d \n", omp_get_max_threads());
         int **SNN_table;
+        begin_graph = clock();
         Solver.create_SNN_graph1(N,table2D,&SNN_table);
+        end_graph = clock() - begin_graph;
 
         printf("\n");
         printf("SNN graph of %d first nodes \n",x);
@@ -61,14 +66,24 @@ int main(int argc, char const *argv[]){
         }
           printf("[............] \n");
           printf("-------------------- \n");
+
+          // time estimates
+          printf("\n");
+          printf("Time spent...\n");
+          printf("Reading from file: %.2f ms\n", CLOCKS_TO_MS(end_read));
+          printf("Creating SNN_graph: %.2f ms \n", CLOCKS_TO_MS(end_graph));
+          printf("Total time: %2.f ms \n", CLOCKS_TO_MS(end_read+end_graph));
+
       }
 
 
     if (stype == 2){
       cout << "Storing CNN as CRS \n \n";
       int *row_ptr , *col_idx;
-      Solver.read_graph_from_file2(filename, &N, &row_ptr, &col_idx);
 
+      begin_read = clock();
+      Solver.read_graph_from_file2(filename, &N, &row_ptr, &col_idx);
+      end_read = clock() - begin_read;
 
       printf("\n");
       printf("CRS storage sample \n");
@@ -90,7 +105,9 @@ int main(int argc, char const *argv[]){
         printf("Creating CRS SNN graph:\n");
         printf("Max threads available for work: %d \n", omp_get_max_threads());
         int *SNN_val;
+        begin_graph = clock();
         Solver.create_SNN_graph2(N,row_ptr,col_idx, &SNN_val);
+        end_graph = clock() - begin_graph;
 
         printf("\n");
         printf("SNN graph for first nodes \n");
@@ -121,9 +138,20 @@ int main(int argc, char const *argv[]){
         cin >> tau;
 
         // checking if node is within cluster, and printing other nodes
+        clock_t begin_cluster, end_cluster;
         printf("------------------------------------------\n");
+        begin_cluster = clock();
         Solver.check_node(node_id,tau, N,row_ptr, col_idx,SNN_val);
+        end_cluster = clock() - begin_cluster;
         printf("------------------------------------------\n");
+
+        // time estimates
+        printf("\n");
+        printf("Time spent...\n");
+        printf("Reading from file: %.2f ms\n", CLOCKS_TO_MS(end_read));
+        printf("Creating SNN_graph: %.2f ms \n", CLOCKS_TO_MS(end_graph));
+        printf("Finding cluster: %.2f ms \n", CLOCKS_TO_MS(end_cluster));
+        printf("Total time: %2.f ms \n", CLOCKS_TO_MS(end_read+end_graph+end_cluster));
     }
 
   // exception handling
