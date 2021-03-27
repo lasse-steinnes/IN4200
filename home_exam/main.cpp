@@ -12,11 +12,11 @@ using namespace std;
 int main(int argc, char const *argv[]){
 
       int N;
-      //char *filename = "face_x";
-      //int x = 5;
+      char *filename = "face_x";
+      int x = 5;
 
-      char *filename = "facebook_combined"; //  "facebook_combined";
-      int x = 10;
+      //char *filename = "facebook_combined"; //  "facebook_combined";
+      //int x = 10;
 
     // read off text file
     int stype;
@@ -72,7 +72,7 @@ int main(int argc, char const *argv[]){
           printf("Time spent...\n");
           printf("Reading from file: %.2f ms\n", CLOCKS_TO_MS(end_read));
           printf("Creating SNN_graph: %.2f ms \n", CLOCKS_TO_MS(end_graph));
-          printf("Total time: %2.f ms \n", CLOCKS_TO_MS(end_read+end_graph));
+          printf("Total time: %.2f ms \n", CLOCKS_TO_MS(end_read+end_graph));
 
       }
 
@@ -151,7 +151,7 @@ int main(int argc, char const *argv[]){
         printf("Reading from file: %.2f ms\n", CLOCKS_TO_MS(end_read));
         printf("Creating SNN_graph: %.2f ms \n", CLOCKS_TO_MS(end_graph));
         printf("Finding cluster: %.2f ms \n", CLOCKS_TO_MS(end_cluster));
-        printf("Total time: %2.f ms \n", CLOCKS_TO_MS(end_read+end_graph+end_cluster));
+        printf("Total time: %.2f ms \n", CLOCKS_TO_MS(end_read+end_graph+end_cluster));
     }
 
   // exception handling
