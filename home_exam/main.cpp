@@ -67,6 +67,10 @@ int main(int argc, char const *argv[]){
           printf("[............] \n");
           printf("-------------------- \n");
 
+          //deallocate
+          free(table2D);
+          free(SNN_table);
+
           // time estimates
           printf("\n");
           printf("Time spent...\n");
@@ -144,6 +148,11 @@ int main(int argc, char const *argv[]){
         Solver.check_node(node_id,tau, N,row_ptr, col_idx,SNN_val);
         end_cluster = clock() - begin_cluster;
         printf("------------------------------------------\n");
+
+        //deallocate
+        free(col_idx);
+        free(row_ptr);
+        free(SNN_val);
 
         // time estimates
         printf("\n");
