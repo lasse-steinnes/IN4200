@@ -81,7 +81,7 @@ void Shared_NN::check_node(int node_id, int tau, int N, int *row_ptr, int *col_i
   cout << "In cluster with: \n";
   int stride = 4;
   int remaind = N%stride; // remainder after loop
-  for (int i = 0; i < N; i+=stride){ // with unroll
+  for (int i = 0; i < N-remaind; i+=stride){ // with unroll
       if (cluster[i] == 1 and i != node_id){
       printf("Node %d \n",i);
       }
@@ -98,8 +98,8 @@ void Shared_NN::check_node(int node_id, int tau, int N, int *row_ptr, int *col_i
 
     // print remainder
     if (remaind != 0){
-      for (int i = N-remaind; i < N; i+=stride){
-      if (cluster[i] == 1 and i != node_id){
+      for (int i = N-remaind; i < N; i++){
+        if (cluster[i] == 1 and i != node_id){
       printf("Node %d \n",i);
         }
       }
