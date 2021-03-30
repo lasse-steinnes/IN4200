@@ -31,8 +31,13 @@ read_graph_from_file2.cpp: Programme which reads a chosen textfile, and stores t
 -
 create_SNN_graph2.cpp: Creates a 1D compact SNN_val array, which can be accessed through row_ptr and col_idx (from CRS format connectivity storage).
 -
-check_node.cpp: Clusters nodes with $`SNN \geq \tau`$, where $`\tau`$ is the threshold value for a node to be in a given cluster. Has a given node ID as search key.
- 
+check_node.cpp: Clusters nodes with
+
+```
+SNN \geq \tau
+```
+, where $\tau$ is the threshold value for a node to be in a given cluster. Has a given node ID as search key.
+
 
 The files can be compiled with "make all". Number of threads can be exported through the terminal:
 
