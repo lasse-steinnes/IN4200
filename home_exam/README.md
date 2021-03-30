@@ -26,7 +26,7 @@ Git repository for Home Exam 1 in the course High Performance Computing (IN4200)
 - ```check_node.cpp```: Clusters edged node-pairs with number of SNNs more or equal to a threshold value. Has a given node ID as search key, and tau as threshold.
 
 
-The files can be compiled with "make all". Number of threads can be exported through the terminal:
+The files can be compiled with ```make all``` in terminal. Number of threads can be exported through the terminal:
 
 ```
   export OMP_NUM_THREADS=<number of threads to use>
@@ -38,4 +38,4 @@ How to run the programmes: The menu provides user input for which method to use.
 
 - Documentation on parallelization with OpenMP can be found [here](https://www.openmp.org/wp-content/uploads/OpenMP-4.5-1115-CPP-web.pdf) or for more versions [here](https://www.openmp.org/resources/refguides/)
 
-- Documentation on  [here](http://arma.sourceforge.net/docs.html)
+- Documentation on fgets [here](https://www.cplusplus.com/reference/cstdio/fgets/) and sscanf [here](https://www.cplusplus.com/reference/cstdio/sscanf/?kw=sscanf). 

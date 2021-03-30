@@ -1,9 +1,8 @@
 #ifndef SHARED_NN_H
 #define SHARED_NN_H
-#include <iostream>
-//#include <fstream>
-#include <string.h> // string, memset
-#include <stdio.h>
+#include <iostream> // cout
+#include <string.h> // string
+#include <stdio.h> // sscanf,fgets
 
 
 // class for the methods
