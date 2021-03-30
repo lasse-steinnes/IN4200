@@ -34,8 +34,10 @@ The files can be compiled with ```make all``` in terminal. Number of threads can
 
 How to run the programmes: The menu provides user input for which method to use. It also asks the user to provide a search key (node ID) and a cluster threshold tau. All tasks is run though main after compiling: ./main.out
 
+Note that the candidate had trouble accessing [login.ifi.uio.no](login.ifi.uio.no). The programmes were compiled and executed on macOS Catalina (v. 10.15.7). 
+
 ### Links and packages
 
 - Documentation on parallelization with OpenMP can be found [here](https://www.openmp.org/wp-content/uploads/OpenMP-4.5-1115-CPP-web.pdf) or for more versions [here](https://www.openmp.org/resources/refguides/)
 
-- Documentation on fgets [here](https://www.cplusplus.com/reference/cstdio/fgets/) and sscanf [here](https://www.cplusplus.com/reference/cstdio/sscanf/?kw=sscanf). 
+- Documentation on fgets [here](https://www.cplusplus.com/reference/cstdio/fgets/) and sscanf [here](https://www.cplusplus.com/reference/cstdio/sscanf/?kw=sscanf).
