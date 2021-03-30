@@ -34,7 +34,7 @@ The files can be compiled with ```make all``` in terminal. Number of threads can
 
 How to run the programmes: The menu provides user input for which method to use. It also asks the user to provide a search key (node ID) and a cluster threshold tau. All tasks is run though main after compiling: ./main.out
 
-Note that the candidate had trouble accessing [login.ifi.uio.no](login.ifi.uio.no). The programmes were compiled and executed on macOS Catalina (v. 10.15.7). Compilations relies on g++-10, to access OpenMP.
+Note that the candidate had trouble accessing [login.ifi.uio.no](login.ifi.uio.no). The programmes were compiled and executed on macOS Catalina (v. 10.15.7). Compilation relies on g++-10, to access OpenMP.
 
 ### Links and packages
 
