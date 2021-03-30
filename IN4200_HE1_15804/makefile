@@ -1,4 +1,4 @@
-##### makefile - see also week 7 for an "upgraded version" ##### 
+##### simple makefile ##### 
 all: compile execute
 
 compile:
