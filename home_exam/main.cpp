@@ -12,11 +12,11 @@ using namespace std;
 int main(int argc, char const *argv[]){
 
       int N;
-      char *filename = "face_x";
-      int x = 5;
+      //char *filename = "face_x";
+      //int x = 5;
 
-      //char *filename = "facebook_combined"; //  "facebook_combined";
-      //int x = 10;
+      char *filename = "facebook_combined"; //  "facebook_combined";
+      int x = 10;
 
     // read off text file
     int stype;
