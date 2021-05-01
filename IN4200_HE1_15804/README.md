@@ -8,6 +8,8 @@ Git repository for Home Exam 1 in the course High Performance Computing (IN4200)
 
 * Textfile examples to be read, can be found in the folder "data".
 
+* Note:  1) For reading files, the negative integers should be discarded in the reading processes 2) For reading CRS format, a dynamic paraellization might be the best. 
+
 ### Code: Description of programmes
 - ```main.cpp```: Runs the other programmes and provide user options through terminal.
 
