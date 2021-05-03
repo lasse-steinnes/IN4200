@@ -39,7 +39,7 @@ int main(int nargs, char **args){
   dims[0] = M; dims[1] = N;
   dims[2] = K1; dims[3] = K2;
 
-  allocate_and_initiate(M, N, &input, K1, &kernel1,
+  allocate_and_initiate(M, N, &input, K1, &kernel1, // all initiated and allocated in root
                           K2, &kernel2,&output);
   }
 
@@ -64,7 +64,8 @@ int main(int nargs, char **args){
   dims[2], kernel2, output);
 
   // print the output/input matrix
-  /*printf("rank %d \n", my_rank);
+  /*printf("In main \n");
+  printf("rank %d \n", my_rank);
   for (int i = 0; i < M; i++){
     for (int j = 0; j < N; j++){
       printf("%f ", input[i][j]);
@@ -142,7 +143,7 @@ void allocate_and_initiate(int M, int N,float ***input, int K1, float ***kernel1
   // assign variables to the inputrix
   for (int i = 0; i < M; i++){
     for (int j = 0; j < N; j++){
-      (*input)[i][j] = 0.0f;
+      (*input)[i][j] = ((float)i) + 0.0f;
     }
   }
 
@@ -191,14 +192,14 @@ void allocate_and_initiate(int M, int N,float ***input, int K1, float ***kernel1
 
 void alloc2dfloat(float ***mat, int m, int n) {
     /* allocate n*m contiguous slots */
-    float *p = (float *)malloc(n*m*sizeof(float));
+    float *p = (float *)malloc((m*n) * sizeof(float));
 
     /* allocate the row pointers into the memory */
-    (*mat) = (float **)malloc(n*sizeof(float*));
+    (*mat) = (float **)malloc(m * sizeof(float*));
 
     /* set up the pointers into the contiguous memory */
-    for (int i=0; i<n; i++){
-       (*mat)[i] = &(p[i*m]);
+    for (int i=0; i<m; i++){
+       (*mat)[i] = &(p[i*n]);
      }
 }
 
