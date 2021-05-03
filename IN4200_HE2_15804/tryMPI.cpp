@@ -1,5 +1,5 @@
 // trying to compile MPI
-
+/*
 #include <mpi.h> //MPI
 #include <stdio.h> // printf
 
@@ -15,3 +15,4 @@ int main(void){
   MPI_Finalize();
   return 0;
 }
+*/
