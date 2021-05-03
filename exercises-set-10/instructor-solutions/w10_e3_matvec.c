@@ -30,13 +30,13 @@ int main(int argc, char *argv[]) {
     // Calculate displacements and number of rows for each process.
     int *n_rows = malloc(numprocs*sizeof *n_rows);
 
-    // Used when scattering A.
+    // Used when scattering .
     int *sendcounts = malloc(numprocs*sizeof *sendcounts);
     int *Sdispls = malloc(numprocs*sizeof *Sdispls);
 
     // Used when gathering y.
     int *Gdispls = malloc(numprocs*sizeof *Gdispls);
-
+  
 
     int rows = N/numprocs;
     int remainder = N%numprocs;

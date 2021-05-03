@@ -6,8 +6,6 @@
 void allocate_and_initiate(int M, int N,float ***input, int K1, float ***kernel1,
                         int K2, float ***kernel2,float***output);
 
-void allocate_kernels(int K1, int K2, float ***kernel1, float ***kernel2);
-
 void double_layer_convolution(int M, int N, float **input, int K1,
   float **kernel1, int K2, float **kernel2, float **output);
 
@@ -52,32 +50,31 @@ int main(int nargs, char **args){
   // handle kernels in non-root processes, and allocate memory for workloads?
   if (my_rank>0) {
     // allocate memory for  the convolutional kernels in non-root processes
-    allocate_kernels(dims[2], dims[3], &kernel1, &kernel2);
+    alloc2dfloat(&kernel1, dims[2], dims[2]);  alloc2dfloat(&kernel2, dims[3], dims[3]);
   }
 
-  for (int i = 0; i < dims[2]; i++){  // broadcast content of kernels
-    MPI_Bcast(kernel1[i], dims[2], MPI_FLOAT, root, MPI_COMM_WORLD);
-  }
+  // broadcast content of kernels
+  MPI_Bcast(&(kernel1[0][0]), dims[2], MPI_FLOAT, root, MPI_COMM_WORLD);
 
-  for (int i = 0; i < dims[3]; i++){   // broadcast content of kernels
-    MPI_Bcast(kernel2[i], dims[3], MPI_FLOAT, root, MPI_COMM_WORLD);
-  }
-
+  // broadcast content of kernels
+  MPI_Bcast(&(kernel2[0][0]), dims[3], MPI_FLOAT, root, MPI_COMM_WORLD);
 
   // parallel computation of double layer convolution
-  /*MPI_double_layer_convolution(M, N, input, K1, kernel1,
-  K2, kernel2, output);*/
+  MPI_double_layer_convolution(dims[0], dims[1], input, dims[2], kernel1,
+  dims[2], kernel2, output);
 
   // print the output/input matrix
-  printf("rank %d \n", my_rank);
+  /*printf("rank %d \n", my_rank);
   for (int i = 0; i < M; i++){
     for (int j = 0; j < N; j++){
       printf("%f ", input[i][j]);
     }
     printf("\n");
-  }
+  }*/
 
   MPI_Finalize();
+
+
 
   free(input);
   free(output);
@@ -128,28 +125,19 @@ void double_layer_convolution(int M, int N, float **input, int K1,
 
 void allocate_and_initiate(int M, int N,float ***input, int K1, float ***kernel1,
                         int K2, float ***kernel2,float***output){ // witht deallocation
-  // allocate 2D inputrices
+
+  // allocate 2D matrices with contiguous memory allocation
   // inputrix to be convoluted
   alloc2dfloat(&(*input), M,N);
 
   // allocate the output inputrix M-K+1 x N-K+1 or M-K1-K2+2 x N-K1-K2 + 2 (double)
-  /**output = (float**) malloc((M-K1-K2+2) * sizeof *output); // dyn. allocate rows
-  for (size_t i = 0; i < M-K1+1; i++) { // dyn. allocate cols
-      (*output)[i] = (float*) malloc((N-K1-K2+2) * sizeof (*output)[0]);
-  }*/
   alloc2dfloat(&(*output),M-K1-K2+2,N-K1-K2+2);
 
   // kernel1
-  *kernel1 = (float**) malloc(K1 * sizeof *kernel1); // d
-  for (size_t i = 0; i < K1; i++) { // dyn. allocate cols
-      (*kernel1)[i] = (float*) malloc(K1 * sizeof (*kernel1)[0]);
-  }
+  alloc2dfloat(&(*kernel1), K1,K1);
 
   // kernel2
-  *kernel2 = (float**) malloc(K2 * sizeof *kernel2);
-  for (size_t i = 0; i < K2; i++) { // dyn. allocate cols
-      (*kernel2)[i] = (float*) malloc(K2 * sizeof (*kernel2)[0]);
-  }
+  alloc2dfloat(&(*kernel2), K2,K2);
 
   // assign variables to the inputrix
   for (int i = 0; i < M; i++){
@@ -200,19 +188,6 @@ void allocate_and_initiate(int M, int N,float ***input, int K1, float ***kernel1
   }
 }
 
-void allocate_kernels(int K1, int K2, float ***kernel1, float ***kernel2){
-  // kernel1
-  *kernel1 = (float**) malloc(K1 * sizeof *kernel1); // d
-  for (size_t i = 0; i < K1; i++) { // dyn. allocate cols
-      (*kernel1)[i] = (float*) malloc(K1 * sizeof (*kernel1)[0]);
-  }
-
-  // kernel2
-  *kernel2 = (float**) malloc(K2 * sizeof *kernel2);
-  for (size_t i = 0; i < K2; i++) { // dyn. allocate cols
-      (*kernel2)[i] = (float*) malloc(K2 * sizeof (*kernel2)[0]);
-  }
-}
 
 void alloc2dfloat(float ***mat, int m, int n) {
     /* allocate n*m contiguous slots */
