@@ -4,9 +4,6 @@
 #include "convolution.hpp" // MPI convolution function
 #include "helper_functions.hpp" // helper functions
 
-
-/*--------------------------------------------------------------------------*/
-
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
 
@@ -55,7 +52,14 @@ int main(int nargs, char **args){
   } else{
     M = atoi(args[1]); N = atoi(args[2]);
     K1 = atoi(args[3]); K2 = atoi(args[4]);
+    if (K1 > N || K2 > N-K1+1 ){ // || is the same as or
+     printf("Error: Dimensions not suitable for double convolution! \n");
+     printf("Exiting programme");
+     return 1;
+      }
   }
+
+  printf("Number of processes available for work: %d \n", procs);
 
   // vals M,N,K1,K2;
   dims[0] = M; dims[1] = N;
