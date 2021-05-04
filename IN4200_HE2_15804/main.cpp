@@ -56,6 +56,16 @@ int main(int nargs, char **args){
   // broadcast content of kernels
   MPI_Bcast(&(kernel1[0][0]), dims[2], MPI_FLOAT, root, MPI_COMM_WORLD);
 
+  if (my_rank>0) {
+  int ii, jj;
+  for (ii=0; ii < dims[2]; ii++){
+  for (jj=0; jj < dims[2]; jj++){
+    printf("%f ", kernel1[ii][jj]);
+    }
+    printf("\n");
+  }
+  }
+
   // broadcast content of kernels
   MPI_Bcast(&(kernel2[0][0]), dims[3], MPI_FLOAT, root, MPI_COMM_WORLD);
 
@@ -63,17 +73,28 @@ int main(int nargs, char **args){
   MPI_double_layer_convolution(dims[0], dims[1], input, dims[2], kernel1,
   dims[2], kernel2, output);
 
-  // print the output/input matrix
-  /*printf("In main \n");
-  printf("rank %d \n", my_rank);
-  for (int i = 0; i < M; i++){
-    for (int j = 0; j < N; j++){
-      printf("%f ", input[i][j]);
+  // print the output matrix
+  /*if (my_rank == root){
+    printf("In main \n");
+    for (int i = 0; i < M-K1-K2+2; i++){
+      for (int j = 0; j < N-K1-K2+2; j++){
+        printf("%f ", output[i][j]);
+      }
+      printf("\n");
     }
-    printf("\n");
-  }*/
 
+  }*/
+  MPI_Barrier(MPI_COMM_WORLD);
   MPI_Finalize();
+
+  // print the output matrix
+  //printf("In main \n");
+  //for (int i = 0; i < M-K1-K2+2; i++){
+  //  for (int j = 0; j < N-K1-K2+2; j++){
+  //    printf("%f ", output[i][j]);
+  //  }
+  //  printf("\n");
+  //}
 
 
 
