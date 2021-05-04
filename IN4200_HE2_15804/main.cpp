@@ -143,7 +143,7 @@ void allocate_and_initiate(int M, int N,float ***input, int K1, float ***kernel1
   // assign variables to the inputrix
   for (int i = 0; i < M; i++){
     for (int j = 0; j < N; j++){
-      (*input)[i][j] = ((float)i) + 0.0f;
+      (*input)[i][j] = 0.0f; //((float)i) +
     }
   }
 

@@ -48,13 +48,13 @@ int out_rows = M - K1 - K2 + 2;
 int sub_rows_out = out_rows/procs;
 int remaind = out_rows%procs;
 
-int  sub_B =  K1 + 1*(sub_rows_out-1); // number of rows in intermediate matrix
+int sub_B =  K1 + 1*(sub_rows_out-1); // number of rows in intermediate matrix
 //int  sub_rows_input = K2 + 1*(sub_rows_B-1); // sub rows in input array
 
 (*send_disp[0]) = 0;
 (*gather_disp[0]) = 0;
 
-printf("sub_rows: %d, remaind: %d, rank: %d \n", sub_rows_out, remaind, my_rank);
+//printf("sub_rows: %d, remaind: %d, rank: %d \n", sub_rows_out, remaind, my_rank);
 
 // divide work by filling in arrays to be send to scatterv and gatherv
 // Last remainder processes gets an extra row.
@@ -104,7 +104,9 @@ if (my_rank > 0){ // allocate input and output
 
   // allocate output matrix
   int cols_out = N-K1-K2+2;
-  alloc2dfloat_conv(&output,gather_disp[my_rank],cols_out);
+  int rows_out = out_send_counts[my_rank]/((int)cols_out);
+  printf("rows out %d cols out %d \n", rows_out,cols_out);
+  alloc2dfloat_conv(&output,rows_out,cols_out);
 }
 
 // allocate intermediate matrix on all processes
@@ -123,26 +125,28 @@ MPI_Scatterv(input[0],
             MPI_COMM_WORLD);
 
 // what is senddisp?
-for (int i = 0; i < procs; i++){
-  printf("send counts: %d senddisp: %d ", send_counts[i],send_disp[i]);
-}
+//for (int i = 0; i < procs; i++){
+//  printf("send counts: %d senddisp: %d ", send_counts[i],send_disp[i]);
+//}
 
 
 // printing the scattered array
-printf("rank %d rows[my_rank] %d  N %d \n", my_rank, rows[my_rank], N);
+/*printf("rank %d rows[my_rank] %d  N %d \n", my_rank, rows[my_rank], N);
 for (int i = 0; i < rows[my_rank]; i++){
   for (int j = 0; j < N; j++){
     printf("%f ", input[i][j]);
   }
   printf("\n");
-}
+}*/
 
 // do calculations
 
   // first convolution
   int temp, i, j, ii, jj;
-  for (i=0; i < rows[my_rank]; i++) { // changed to match rank
-  for (j=0; j < N-K1 + 1; j++) { // all columns
+  int cols_out = N-K1-K2+2;
+  //printf(" rows %d rows B %d sendcount/cols %d cols out %d\n", rows[my_rank], sub_rows_B[my_rank],out_send_counts[my_rank]/((int)cols_out), cols_out);
+  for (i=0; i < sub_rows_B[my_rank]; i++){ // changed to match rank
+  for (j=0; j < N-K1 + 1; j++) { // all columns in matB
     temp = 0.0f;
 
     for (ii=0; ii < K1; ii++){
@@ -155,21 +159,26 @@ for (int i = 0; i < rows[my_rank]; i++){
   }
 
   // second convolution
-  for (i=0; i< sub_rows_B[my_rank]; i++){ // changed to match rank
-  for (j=0; j< N-K1-K2+2; j++) {
-    temp = 0.0;
+  //int cols_out = N-K1-K2+2;
+  int temp2;
+  int rows_out = out_send_counts[my_rank]/((int)cols_out);
+  for (i=0; i< rows_out ; i++){ // changed to match rank
+  for (j=0; j< cols_out; j++) { // all columns in output
+    temp2 = 0.0f;
 
     for (ii=0; ii < K2; ii++){
     for (jj=0; jj < K2; jj++){
       temp += matB[i+ii][j+jj]*kernel2[ii][jj];
       }
     }
-    output[i][j] = temp;
+    output[i][j] = temp2;
     }
   }
 
-/*    // Gather the results
-    MPI_Gatherv(y,
+
+
+  // Gather the results
+    MPI_Gatherv(output[0],
                 n_rows[myrank],
                 MPI_DOUBLE,
                 y,              // Matters only at root,
@@ -178,5 +187,5 @@ for (int i = 0; i < rows[my_rank]; i++){
                 MPI_DOUBLE,
                 0,
                 MPI_COMM_WORLD);
-*/
+
 }
