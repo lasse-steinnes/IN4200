@@ -54,7 +54,7 @@ int main(int nargs, char **args){
   }
 
   // broadcast content of kernels
-  MPI_Bcast(&(kernel1[0][0]), dims[2], MPI_FLOAT, root, MPI_COMM_WORLD);
+  MPI_Bcast(&(kernel1[0][0]), dims[2]*dims[2], MPI_FLOAT, root, MPI_COMM_WORLD);
 
   if (my_rank>0) {
   int ii, jj;
@@ -67,7 +67,7 @@ int main(int nargs, char **args){
   }
 
   // broadcast content of kernels
-  MPI_Bcast(&(kernel2[0][0]), dims[3], MPI_FLOAT, root, MPI_COMM_WORLD);
+  MPI_Bcast(&(kernel2[0][0]), dims[3]*dims[3], MPI_FLOAT, root, MPI_COMM_WORLD);
 
   // parallel computation of double layer convolution
   MPI_double_layer_convolution(dims[0], dims[1], input, dims[2], kernel1,
