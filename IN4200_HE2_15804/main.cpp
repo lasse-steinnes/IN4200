@@ -56,22 +56,12 @@ int main(int nargs, char **args){
   // broadcast content of kernels
   MPI_Bcast(&(kernel1[0][0]), dims[2]*dims[2], MPI_FLOAT, root, MPI_COMM_WORLD);
 
-  if (my_rank>0) {
-  int ii, jj;
-  for (ii=0; ii < dims[2]; ii++){
-  for (jj=0; jj < dims[2]; jj++){
-    printf("%f ", kernel1[ii][jj]);
-    }
-    printf("\n");
-  }
-  }
-
   // broadcast content of kernels
   MPI_Bcast(&(kernel2[0][0]), dims[3]*dims[3], MPI_FLOAT, root, MPI_COMM_WORLD);
 
   // parallel computation of double layer convolution
   MPI_double_layer_convolution(dims[0], dims[1], input, dims[2], kernel1,
-  dims[2], kernel2, output);
+  dims[3], kernel2, output);
 
   // print the output matrix
   /*if (my_rank == root){
@@ -106,7 +96,7 @@ int main(int nargs, char **args){
 void double_layer_convolution(int M, int N, float **input, int K1,
   float **kernel1, int K2, float **kernel2, float **output){
   int i,j,ii,jj;
-  double temp;
+  float temp;
 
   // allocate a temporal_arr
   float **intermediate= (float**) malloc((M-K1+1) * sizeof *intermediate); // dyn. allocate rows
@@ -117,7 +107,7 @@ void double_layer_convolution(int M, int N, float **input, int K1,
   // first convolution
   for (i=0; i<=M-K1; i++) {
   for (j=0; j<=N-K1; j++) {
-    temp = 0.0;
+    temp = 0.0f;
 
     for (ii=0; ii < K1; ii++){
     for (jj=0; jj < K1; jj++){
@@ -131,7 +121,7 @@ void double_layer_convolution(int M, int N, float **input, int K1,
   // second convolution
   for (i=0; i<=M-K1-K2+1; i++) {
   for (j=0; j<=N-K1-K2+1; j++) {
-    temp = 0.0;
+    temp = 0.0f;
 
     for (ii=0; ii < K2; ii++){
     for (jj=0; jj < K2; jj++){

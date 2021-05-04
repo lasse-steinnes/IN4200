@@ -111,7 +111,7 @@ if (my_rank > 0){ // allocate input and output
 }
 
 // allocate intermediate matrix on all processes
-int cols_B = N-K1-1;
+int cols_B = N-K1+1;
 float **matB = NULL;
 alloc2dfloat_conv(&matB, sub_rows_B[my_rank], cols_B);
 
@@ -143,8 +143,8 @@ for (int i = 0; i < rows[my_rank]; i++){
 // do calculations
 
   // first convolution
-  int temp, i, j, ii, jj;
-  int cols_out = N-K1-K2+2;
+  float temp;
+  int i, j, ii, jj;
   printf("rank %d \n ", my_rank);
   //printf(" rows %d rows B %d sendcount/cols %d cols out %d\n", rows[my_rank], sub_rows_B[my_rank],out_send_counts[my_rank]/((int)cols_out), cols_out);
   for (i=0; i < sub_rows_B[my_rank]; i++){ // changed to match rank
@@ -154,30 +154,29 @@ for (int i = 0; i < rows[my_rank]; i++){
     for (ii=0; ii < K1; ii++){
     for (jj=0; jj < K1; jj++){
       temp += input[i+ii][j+jj]*kernel1[ii][jj];
-      //printf("%f ", kernel1[ii][jj]);
       }
-      //printf("\n");
     }
-    matB[i][j] = temp;
+    (matB)[i][j] = temp;
     //printf("%f ", matB[i][j]);
     }
     //printf("\n");
   }
 
   // second convolution
-  //int cols_out = N-K1-K2+2;
-  int temp2;
+  int cols_out = N-K1-K2+2;
   int rows_out = out_send_counts[my_rank]/((int)cols_out);
   for (i=0; i< rows_out ; i++){ // changed to match rank
   for (j=0; j< cols_out; j++) { // all columns in output
-    temp2 = 0.0f;
+    temp = 0.0f;
 
     for (ii=0; ii < K2; ii++){
-    for (jj=0; jj < K2; jj++){
+    for (jj=0;jj < K2;jj++){
+      //printf("%f \n", matB[i+ii][k+kk]);
       temp += matB[i+ii][j+jj]*kernel2[ii][jj];
       }
+      //printf("\n");
     }
-    output[i][j] = temp2;
+    output[i][j] = temp;
     //printf("%f ", output[i][j]);
     }
     //printf("\n");
@@ -194,7 +193,6 @@ for (int i = 0; i < rows[my_rank]; i++){
               MPI_COMM_WORLD);
 */
 
-
   // Gather the results
     MPI_Gatherv(output[0],
                 out_send_counts[my_rank],
@@ -206,7 +204,7 @@ for (int i = 0; i < rows[my_rank]; i++){
                 0,
                 MPI_COMM_WORLD);
 
-    /*if (my_rank == 0){
+    if (my_rank == 0){
     printf(" \n");
     for (int i = 0; i < M-K1-K2+2; i++){
       for (int j = 0; j < N-K1-K2+2; j++){
@@ -214,5 +212,5 @@ for (int i = 0; i < rows[my_rank]; i++){
       }
       printf("\n");
     }
-  }*/
+  }
 }
