@@ -2,7 +2,11 @@
 #include <stdlib.h> // atoi
 #include <mpi.h> // MPI
 #include "convolution.hpp" // MPI convolution function
+#include "helper_functions.hpp" // MPI convolution function
 
+/*--------------------------------------------------------------------------*/
+/*  Declaring helper functions */
+/*--------------------------------------------------------------------------*/
 /*void allocate_and_initiate(int M, int N,float ***input, int K1, float ***kernel1,
                         int K2, float ***kernel2,float***output);
 void double_layer_convolution(int M, int N, float **input, int K1,
@@ -12,6 +16,19 @@ void free2dfloat(float ***mat);
 void mean_squared_error(float ** mat1, float** mat2, int rows, int cols);
 void print_matrix(float ** mat, int rows, int cols);
 */
+
+/*--------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------*/
+
+/*                         MAIN PROGRAM                                     */
+
+/*--------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------*/
+
+
+
 using namespace std;
 int main(int nargs, char **args){
 
@@ -64,7 +81,6 @@ int main(int nargs, char **args){
 
   // print the output matrix and compare with serial
   if (my_rank == root){
-
     //print matrix
     if (N < 10){
     print_matrix(output,M-K1-K2+2,N-K1-K2+2);

@@ -1,4 +1,4 @@
-##### simple makefile ##### 
+##### simple makefile #####
 all: compile execute
 
 compile:
