@@ -112,8 +112,6 @@ int cols_B = N-K1-1;
 float **matB = NULL;
 alloc2dfloat_conv(&matB, sub_rows_B[my_rank], cols_B);
 
-
-
 MPI_Scatterv(input[0],
             send_counts,
             send_disp,
@@ -139,15 +137,36 @@ for (int i = 0; i < rows[my_rank]; i++){
   printf("\n");
 }
 
-/*
-// Allocate local buffers.
-double *A;
-double *x = malloc(N * sizeof *x);
-} else (not root) {
-    A = malloc(M*rows[myrank] * sizeof *A);
-}*/
+// do calculations
 
+  // first convolution
+  int temp, i, j, ii, jj;
+  for (i=0; i < rows[my_rank]; i++) { // changed to match rank
+  for (j=0; j < N-K1 + 1; j++) { // all columns
+    temp = 0.0f;
 
+    for (ii=0; ii < K1; ii++){
+    for (jj=0; jj < K1; jj++){
+      temp += input[i+ii][j+jj]*kernel1[ii][jj];
+      }
+    }
+    matB[i][j] = temp;
+    }
+  }
+
+  // second convolution
+  for (i=0; i< sub_rows_B[my_rank]; i++){ // changed to match rank
+  for (j=0; j< N-K1-K2+2; j++) {
+    temp = 0.0;
+
+    for (ii=0; ii < K2; ii++){
+    for (jj=0; jj < K2; jj++){
+      temp += matB[i+ii][j+jj]*kernel2[ii][jj];
+      }
+    }
+    output[i][j] = temp;
+    }
+  }
 
 /*    // Gather the results
     MPI_Gatherv(y,
