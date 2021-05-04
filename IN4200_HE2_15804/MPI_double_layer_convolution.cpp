@@ -4,6 +4,19 @@
 #include <stdio.h> //printf
 #include <stdlib.h> //malloc
 
+void alloc2dfloat_conv(float ***mat, int m, int n){
+    /* allocate n*m contiguous slots */
+    float *p = (float *)malloc((m*n) * sizeof(float));
+
+    /* allocate the row pointers into the memory */
+    (*mat) = (float **)malloc(m * sizeof(float*));
+
+    /* set up the pointers into the contiguous memory */
+    for (int i=0; i<m; i++){
+       (*mat)[i] = &(p[i*n]);
+     }
+}
+
 void divide_work(int **out_send_counts, int **rows, int **send_counts, int **send_disp, int **gather_disp,
                   int **subrowsB_arr, int K1, int K2, int M, int N, int procs, int my_rank){
 
@@ -18,6 +31,7 @@ void divide_work(int **out_send_counts, int **rows, int **send_counts, int **sen
 *send_disp = (int*) malloc(procs * sizeof (*send_disp));
 
 // array for where to start accesing gathering output (new dims remember)
+// need to multiply with number of cols in the output matrix
 *gather_disp = (int*) malloc(procs*sizeof (*gather_disp));
 
 // array for number of elements in gathering output
@@ -44,7 +58,6 @@ printf("sub_rows: %d, remaind: %d, rank: %d \n", sub_rows_out, remaind, my_rank)
 
 // divide work by filling in arrays to be send to scatterv and gatherv
 // Last remainder processes gets an extra row.
-//int placeholder1, placeholder2;
 // gatherdisp must be suited to output
 int tot_rows = 0,sub_rows_B = 0;
 for (int rankid = 0; rankid < procs-1; rankid++){
@@ -62,6 +75,7 @@ for (int rankid = 0; rankid < procs-1; rankid++){
 
 // fix the last ones
 sub_rows_B = sub_B + ((procs-1 >= (procs - remaind)) ? 1:0);
+(*subrowsB_arr)[procs-1] = sub_rows_B;
 (*rows)[procs-1] =  K2 + 1*(sub_rows_B-1)
                   + ((procs-1) >= (procs - remaind) ? 1:0);
 (*send_counts)[procs-1] = (*rows)[procs-1]*N;
@@ -84,35 +98,21 @@ int *out_send_counts = NULL,*rows = NULL,
 divide_work(&out_send_counts,&rows, &send_counts, &send_disp, &gather_disp,
             &sub_rows_B,K1, K2, M, N, procs,my_rank);
 
-// allocate local buffers and scatterv (input and output)
-float *intermediate;
-
 if (my_rank > 0){ // allocate input and output
   //allocate input
-  float *p = (float *)malloc((rows[my_rank]*N)*sizeof(*p));
-  input = (float **)malloc((rows[my_rank])*sizeof(float*));
-  /* set up the pointers into the contiguous memory */
-  for (int i=0; i < rows[my_rank]; i++){
-     input[i] = &(p[i*N]);
-   }
+  alloc2dfloat_conv(&input,rows[my_rank],N);
+
+  // allocate output matrix
+  int cols_out = N-K1-K2+2;
+  alloc2dfloat_conv(&output,gather_disp[my_rank],cols_out);
 }
 
-// allocate a matrix to hold
-//1) intermediate result
-  // which should hold 1 (or more?) extra row to be received
+// allocate intermediate matrix on all processes
+int cols_B = N-K1-1;
+float **matB = NULL;
+alloc2dfloat_conv(&matB, sub_rows_B[my_rank], cols_B);
 
-//2) output matrix
 
-
-/*MPI_Scatterv(A,                 // Sendbuff, matters only for root process.
-             sendcounts,
-             Sdispls,
-             MPI_DOUBLE,
-             A,                 // Recieve buff is the same as sendbuf here.
-             N*n_rows[myrank],
-             MPI_DOUBLE,
-             0,
-             MPI_COMM_WORLD);*/
 
 MPI_Scatterv(input[0],
             send_counts,
@@ -139,12 +139,6 @@ for (int i = 0; i < rows[my_rank]; i++){
   printf("\n");
 }
 
-//int MPI_Scatterv(const void *sendbuf, const int *sendcounts, const int *displs,
-//                 MPI_Datatype sendtype, void *recvbuf, int recvcount,
-//                 MPI_Datatype recvtype, int root, MPI_Comm comm)
-// scatter
-
-
 /*
 // Allocate local buffers.
 double *A;
@@ -152,18 +146,6 @@ double *x = malloc(N * sizeof *x);
 } else (not root) {
     A = malloc(M*rows[myrank] * sizeof *A);
 }*/
-
-/*
-  MPI_Scatterv(A,                 // Sendbuff, matters only for root process.
-               sendcounts,
-               Sdispls,
-               MPI_DOUBLE,
-               A,                 // Recieve buff is the same as sendbuf here.
-               M*rows[myrank],
-               MPI_DOUBLE,
-               0,
-               MPI_COMM_WORLD);
-*/
 
 
 
