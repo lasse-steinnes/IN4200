@@ -145,7 +145,7 @@ for (int i = 0; i < rows[my_rank]; i++){
   // first convolution
   float temp;
   int i, j, ii, jj;
-  printf("rank %d \n ", my_rank);
+  //printf("rank %d \n ", my_rank);
   //printf(" rows %d rows B %d sendcount/cols %d cols out %d\n", rows[my_rank], sub_rows_B[my_rank],out_send_counts[my_rank]/((int)cols_out), cols_out);
   for (i=0; i < sub_rows_B[my_rank]; i++){ // changed to match rank
   for (j=0; j < N-K1 + 1; j++) { // all columns in matB
@@ -204,7 +204,7 @@ for (int i = 0; i < rows[my_rank]; i++){
                 0,
                 MPI_COMM_WORLD);
 
-    if (my_rank == 0){
+    /*if (my_rank == 0){
     printf(" \n");
     for (int i = 0; i < M-K1-K2+2; i++){
       for (int j = 0; j < N-K1-K2+2; j++){
@@ -212,5 +212,5 @@ for (int i = 0; i < rows[my_rank]; i++){
       }
       printf("\n");
     }
-  }
+  }*/
 }
