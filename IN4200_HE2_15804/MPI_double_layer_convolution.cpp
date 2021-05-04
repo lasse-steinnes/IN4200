@@ -1,6 +1,6 @@
 // function for MPI version of convolution
 #include "convolution.hpp"
-#include <mpi.h>
+#include <mpi.h> // needed for scatterv and gatherv
 #include <stdio.h> //printf
 #include <stdlib.h> //malloc
 
@@ -54,7 +54,7 @@ int sub_B =  K1 + 1*(sub_rows_out-1); // number of rows in intermediate matrix
 (*send_disp[0]) = 0;
 (*gather_disp[0]) = 0;
 
-//printf("sub_rows: %d, remaind: %d, rank: %d \n", sub_rows_out, remaind, my_rank);
+printf("out_rows: %d, remaind: %d, rank: %d procs: %d \n", out_rows, remaind, my_rank, procs);
 
 // divide work by filling in arrays to be send to scatterv and gatherv
 // Last remainder processes gets an extra row.
@@ -64,7 +64,7 @@ for (int rankid = 0; rankid < procs-1; rankid++){
   sub_rows_B = sub_B + ((rankid >= (procs - remaind)) ? 1:0);
   (*rows)[rankid] =  K2 + 1*(sub_rows_B-1);        // number of rows to be sent
   (*subrowsB_arr)[rankid] = sub_rows_B;             // number of rows in intermediate matrix
-  (*send_counts[rankid]) = (*rows)[rankid]*N;     //send numbercounter of elements
+  (*send_counts)[rankid] = (*rows)[rankid]*N;     //send numbercounter of elements
   tot_rows += sub_rows_out + ((rankid >= (procs - remaind)) ? 1:0); // counter how to distr
   (*send_disp)[rankid+1] = tot_rows*N;            // send the index to start
   (*gather_disp)[rankid+1] = ((*gather_disp)[rankid] + sub_rows_out  // how displacement is in gather
@@ -76,11 +76,23 @@ for (int rankid = 0; rankid < procs-1; rankid++){
 // fix the last ones
 sub_rows_B = sub_B + ((procs-1 >= (procs - remaind)) ? 1:0);
 (*subrowsB_arr)[procs-1] = sub_rows_B;
-(*rows)[procs-1] =  K2 + 1*(sub_rows_B-1)
-                  + ((procs-1) >= (procs - remaind) ? 1:0);
+(*rows)[procs-1] =  K2 + 1*(sub_rows_B-1);  //+ ((procs-1) >= (procs - remaind) ? 1:0);
+
 (*send_counts)[procs-1] = (*rows)[procs-1]*N;
 (*out_send_counts)[procs-1] = (sub_rows_out                      // number of elements to be gathered
                           + ((procs-1 >= (procs - remaind)) ? 1:0))*(cols_out); // to outputmatrix
+
+if (my_rank == 0){
+  for (int rankid = 0; rankid < procs; rankid++){
+    printf("%d\n", rankid);
+    printf("rows A %d\n",(*rows)[rankid]);
+    printf("subrows B %d\n",(*subrowsB_arr)[rankid]);
+    printf("send counts %d\n",(*send_counts)[rankid]);
+    printf("send disp %d\n",(*send_disp)[rankid]);
+    printf("gather disp %d\n",(*gather_disp)[rankid]);
+  }
+}
+
 }
 
 
@@ -105,7 +117,7 @@ if (my_rank > 0){ // allocate input and output
 
   // allocate output matrix
   int cols_out = N-K1-K2+2;
-  int rows_out = out_send_counts[my_rank]/((int)cols_out);
+  int rows_out = out_send_counts[my_rank]/((int)cols_out); // is this wrong?
   //printf("rows out %d cols out %d \n", rows_out,cols_out);
   alloc2dfloat_conv(&output,rows_out,cols_out);
 }
@@ -125,7 +137,7 @@ MPI_Scatterv(input[0],
             0,
             MPI_COMM_WORLD);
 
-// what is senddisp?
+// what is senddisp? // when difference between K1 and K2 large --> problem
 //for (int i = 0; i < procs; i++){
 //  printf("send counts: %d senddisp: %d ", send_counts[i],send_disp[i]);
 //}
@@ -143,7 +155,7 @@ for (int i = 0; i < rows[my_rank]; i++){
 // do calculations
 
   // first convolution
-  float temp;
+  /*float temp;
   int i, j, ii, jj;
   //printf("rank %d \n ", my_rank);
   //printf(" rows %d rows B %d sendcount/cols %d cols out %d\n", rows[my_rank], sub_rows_B[my_rank],out_send_counts[my_rank]/((int)cols_out), cols_out);
@@ -160,8 +172,8 @@ for (int i = 0; i < rows[my_rank]; i++){
     //printf("%f ", matB[i][j]);
     }
     //printf("\n");
-  }
-
+  }*/
+/*
   // second convolution
   int cols_out = N-K1-K2+2;
   int rows_out = out_send_counts[my_rank]/((int)cols_out);
@@ -181,17 +193,6 @@ for (int i = 0; i < rows[my_rank]; i++){
     }
     //printf("\n");
   }
-/*
-  MPI_Gatherv(y,
-              n_rows[myrank],
-              MPI_DOUBLE,
-              y,              // Matters only at root,
-              n_rows,
-              Gdispls,
-              MPI_DOUBLE,
-              0,
-              MPI_COMM_WORLD);
-*/
 
   // Gather the results
     MPI_Gatherv(output[0],
@@ -203,14 +204,5 @@ for (int i = 0; i < rows[my_rank]; i++){
                 MPI_FLOAT,
                 0,
                 MPI_COMM_WORLD);
-
-    /*if (my_rank == 0){
-    printf(" \n");
-    for (int i = 0; i < M-K1-K2+2; i++){
-      for (int j = 0; j < N-K1-K2+2; j++){
-        printf("%f ", output[i][j]);
-      }
-      printf("\n");
-    }
-  }*/
+*/
 }
