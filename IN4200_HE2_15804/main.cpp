@@ -2,20 +2,8 @@
 #include <stdlib.h> // atoi
 #include <mpi.h> // MPI
 #include "convolution.hpp" // MPI convolution function
-#include "helper_functions.hpp" // MPI convolution function
+#include "helper_functions.hpp" // helper functions
 
-/*--------------------------------------------------------------------------*/
-/*  Declaring helper functions */
-/*--------------------------------------------------------------------------*/
-/*void allocate_and_initiate(int M, int N,float ***input, int K1, float ***kernel1,
-                        int K2, float ***kernel2,float***output);
-void double_layer_convolution(int M, int N, float **input, int K1,
-  float **kernel1, int K2, float **kernel2, float **output);
-void alloc2dfloat(float ***mat, int m, int n);
-void free2dfloat(float ***mat);
-void mean_squared_error(float ** mat1, float** mat2, int rows, int cols);
-void print_matrix(float ** mat, int rows, int cols);
-*/
 
 /*--------------------------------------------------------------------------*/
 
@@ -27,6 +15,24 @@ void print_matrix(float ** mat, int rows, int cols);
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
 
+// trying to compile MPI
+/*
+#include <mpi.h> //MPI
+#include <stdio.h> // printf
+
+int main(void){
+
+  MPI_Init(NULL,NULL);
+  int size, rank;
+  MPI_Comm_size(MPI_COMM_WORLD, &size); // number of processes
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  printf("Hello World and rank %d \n", rank);
+
+
+  MPI_Finalize();
+  return 0;
+}
+*/
 
 
 using namespace std;

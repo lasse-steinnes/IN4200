@@ -5,7 +5,7 @@
 #ifndef helper_functions_H
 #define helper_funtions_H
 
-
+using namespace std;
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
 
@@ -165,7 +165,5 @@ void print_matrix(float **mat,int rows,int cols){
     printf("\n");
     }
 }
-
-
 
 #endif
