@@ -20,9 +20,9 @@ Git repository for Home Exam 2 in the course High Performance Computing (IN4200)
 
 - ```makefile```: Compiles and executes cpp files with optimization flags.
 
--  ```shared_nn.hpp```: Headerfile for the class Shared_NN, listing all functions relevant for HE1.
+-  ```convolution.hpp```: Headerfile for the class Shared_NN, listing all functions relevant for HE1.
 
-- ```read_graph_from_file1.cpp```: Provides the 2D method for reading a chosen textfile. It   allocates memory for table2D, to be used in creating SNN_table.
+- ```helper_functions.hpp```: Provides the 2D method for reading a chosen textfile. It   allocates memory for table2D, to be used in creating SNN_table.
 
 - ```create_SNN_graph1.cpp```: Creates an SNN grid, which shows how many SNNs an edged node-pair has. The SNN graph is stored as a 2D matrix.
 
