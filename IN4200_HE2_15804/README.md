@@ -15,36 +15,37 @@ Git repository for Home Exam 2 in the course High Performance Computing (IN4200)
 * The work division decides how the input matrix is scattered, and how the output matrix is gathered. Since MPI_Scatterv needs contiguous memory allocation, the 2D matrices are allocated contiguously. When scattered, one must not send the row displacement, but the element displacement. Thus, the displacement in rows are multiplied with the correct number of columns.
 
 
-### Code: Description of programmes
-- ```main.cpp```: Runs the other programmes and provide user options through terminal.
+### Code: Description of programs
+- ```main.cpp```: Runs the other programs and provide user options through terminal.
 
-- ```makefile```: Compiles and executes cpp files with optimization flags.
+- ```makefile```: Compiles cpp/c files with optimization flag -Ofast (compiler mpiCC).
 
--  ```convolution.hpp```: Headerfile for the class Shared_NN, listing all functions relevant for HE1.
+-  ```convolution.hpp```: Headerfile for the MPI_double_layer_convolution function.
 
-- ```helper_functions.hpp```: Provides the 2D method for reading a chosen textfile. It   allocates memory for table2D, to be used in creating SNN_table.
+- ```helper_functions.hpp```: Provides helper functions to be used in main.cpp.
+    1. ```alloc2dfloat```: Allocates a 2D matrix contiguously in memory.
+    2. ```free2dfloat```: Free the contiguously allocated 2D matrix.
+    3. ```mean_squared_error```: Finds the means squared error between matrix elements of two matrices.
+    4. ```double_layer_convolution```: Serial code solution of the double convolution.
+    5. ```allocate_and_initiate```: Allocates and initiates input matrix and kernels.
+    6. ```print_matrix```: Prints a 2D matrix.
 
-- ```create_SNN_graph1.cpp```: Creates an SNN grid, which shows how many SNNs an edged node-pair has. The SNN graph is stored as a 2D matrix.
+- ```MPI_double_layer_convolution.cpp```: The parallel version of double convolution.
 
 
-- ```read_graph_from_file2.cpp```: Programme which reads a chosen textfile, and stores the information of edged node-pairs in 1D CRS format.
 
-- ```create_SNN_graph2.cpp```: Creates a 1D compact SNN_val array, which can be accessed through row_ptr and col_idx (from CRS format connectivity storage).
-- ```check_node.cpp```: Clusters edged node-pairs with number of SNNs more or equal to a threshold value. Has a given node ID as search key, and tau as threshold.
-
-
-The files can be compiled with ```make all``` in terminal. Number of threads can be exported through the terminal:
+The files can be compiled with ```make all``` in terminal. In the directory of the executable, the program can be run either by
+```
+mpirun -n 2 ./main.out
+```
+where the dimensions of the input matrix (MxN) = (8x8) and kernels (K1xK1), (K2xK2) = (3x3) are predetermined. Another options is user provided dimension
 
 ```
-  export OMP_NUM_THREADS=<number of threads to use>
+mpirun -n 2 ./main.out M N K1 K2
 ```
 
-How to run the programmes: The menu provides user input for which method to use. It also asks the user to provide a search key (node ID) and a cluster threshold tau. All tasks is run though main after compiling: ./main.out
-
-Note that the candidate had trouble accessing [login.ifi.uio.no](login.ifi.uio.no). The programmes were compiled and executed on macOS Catalina (v. 10.15.7). Compilation relies on mpiCC, to access Open MPI.
+The programs were compiled and executed on macOS Catalina (v. 10.15.7). Compilation relies on mpiCC, to access Open MPI.
 
 ### Links and packages
 
-- Documentation on parallelization with OpenMP can be found [here](https://www.openmp.org/wp-content/uploads/OpenMP-4.5-1115-CPP-web.pdf) or for more versions [here](https://www.openmp.org/resources/refguides/)
-
-- Documentation on fgets [here](https://www.cplusplus.com/reference/cstdio/fgets/) and sscanf [here](https://www.cplusplus.com/reference/cstdio/sscanf/?kw=sscanf).
+- Documentation on parallelization with Open MPI can be found [here](https://www.open-mpi.org/doc/). The version applied to test the code was  v4.1.1. Compatibility issues may arise if another version is used.
