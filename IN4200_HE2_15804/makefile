@@ -2,4 +2,4 @@
 all: compile
 
 compile:
-	mpiCC -Wall -o main.out $(wildcard *.cpp .c) -std=c++11 -Ofast
+	mpiCC -Wall -o MPI_main.out $(wildcard *.cpp .c) -std=c++11 -Ofast

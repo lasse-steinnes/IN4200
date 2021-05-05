@@ -156,7 +156,6 @@ void allocate_and_initiate(int M, int N,float ***input, int K1, float ***kernel1
   // -----------------------------------------
    // initiating to some values
   // -----------------------------------------
-  //
 
   // assign variables to the inputrix
   // same values as in problem description example

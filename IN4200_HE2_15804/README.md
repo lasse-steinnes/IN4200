@@ -37,12 +37,12 @@ Git repository for Home Exam 2 in the course High Performance Computing (IN4200)
 
 The files can be compiled with ```make all``` in terminal. In the directory of the executable, the programme can be run either by
 ```
-mpirun -n [number of MPI processes] ./main.out
+mpirun -n [number of MPI processes] ./MPI_main.out
 ```
 where the dimensions of the input matrix (MxN) = (8x8) and kernels (K1xK1), (K2xK2) = (3x3) are predetermined. Another option is user provided dimensions
 
 ```
-mpirun -n [number of MPI processes] ./main.out [M] [N] [K1] [K2]
+mpirun -n [number of MPI processes] ./MPI_main.out [M] [N] [K1] [K2]
 ```
 
 The programmes were compiled and executed on macOS Catalina (v. 10.15.7). Compilation relies on mpiCC, to access Open MPI (v4.1.1).
