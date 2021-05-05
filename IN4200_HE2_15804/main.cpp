@@ -71,7 +71,7 @@ int main(int nargs, char **args){
   MPI_double_layer_convolution(dims[0], dims[1], input, dims[2], kernel1,
   dims[3], kernel2, output);
 
-  /*// print the output matrix and compare with serial
+  // print the output matrix and compare with serial
   if (my_rank == root){
     //print matrix
     if (N < 10){
@@ -84,7 +84,7 @@ int main(int nargs, char **args){
     double_layer_convolution(M, N, input, K1,
       kernel1, K2, kernel2, output_serial);
     mean_squared_error(output, output_serial,M-K1-K2+2,N-K1-K2+2);
-  }*/
+  }
 
   free(input);
   free(output);

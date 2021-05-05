@@ -48,7 +48,7 @@ int out_rows = M - K1 - K2 + 2;
 int sub_rows_out = out_rows/procs;
 int remaind = out_rows%procs;
 
-int sub_B =  K1 + 1*(sub_rows_out-1); // number of rows in intermediate matrix
+//int sub_B =  K2 + 1*(sub_rows_out-1); // number of rows in intermediate matrix
 //int  sub_rows_input = K2 + 1*(sub_rows_B-1); // sub rows in input array
 
 (*send_disp[0]) = 0;
@@ -61,8 +61,8 @@ printf("out_rows: %d, remaind: %d, rank: %d procs: %d \n", out_rows, remaind, my
 // gatherdisp must be suited to output
 int tot_rows = 0,sub_rows_B = 0;
 for (int rankid = 0; rankid < procs-1; rankid++){
-  sub_rows_B = sub_B + ((rankid >= (procs - remaind)) ? 1:0);
-  (*rows)[rankid] =  K2 + 1*(sub_rows_B-1);        // number of rows to be sent
+  sub_rows_B = K2 + 1*(sub_rows_out + ((rankid >= (procs - remaind)) ? 1:0)-1);
+  (*rows)[rankid] =  K1 + 1*(sub_rows_B-1);        // number of rows to be sent
   (*subrowsB_arr)[rankid] = sub_rows_B;             // number of rows in intermediate matrix
   (*send_counts)[rankid] = (*rows)[rankid]*N;     //send numbercounter of elements
   tot_rows += sub_rows_out + ((rankid >= (procs - remaind)) ? 1:0); // counter how to distr
@@ -74,9 +74,9 @@ for (int rankid = 0; rankid < procs-1; rankid++){
 }
 
 // fix the last ones
-sub_rows_B = sub_B + ((procs-1 >= (procs - remaind)) ? 1:0);
+sub_rows_B = K2 + 1*(sub_rows_out + ((procs-1 >= (procs - remaind)) ? 1:0)-1);
 (*subrowsB_arr)[procs-1] = sub_rows_B;
-(*rows)[procs-1] =  K2 + 1*(sub_rows_B-1);  //+ ((procs-1) >= (procs - remaind) ? 1:0);
+(*rows)[procs-1] =  K1 + 1*(sub_rows_B-1);  //+ ((procs-1) >= (procs - remaind) ? 1:0);
 
 (*send_counts)[procs-1] = (*rows)[procs-1]*N;
 (*out_send_counts)[procs-1] = (sub_rows_out                      // number of elements to be gathered
@@ -155,10 +155,8 @@ for (int i = 0; i < rows[my_rank]; i++){
 // do calculations
 
   // first convolution
-  /*float temp;
+  float temp;
   int i, j, ii, jj;
-  //printf("rank %d \n ", my_rank);
-  //printf(" rows %d rows B %d sendcount/cols %d cols out %d\n", rows[my_rank], sub_rows_B[my_rank],out_send_counts[my_rank]/((int)cols_out), cols_out);
   for (i=0; i < sub_rows_B[my_rank]; i++){ // changed to match rank
   for (j=0; j < N-K1 + 1; j++) { // all columns in matB
     temp = 0.0f;
@@ -169,11 +167,9 @@ for (int i = 0; i < rows[my_rank]; i++){
       }
     }
     (matB)[i][j] = temp;
-    //printf("%f ", matB[i][j]);
     }
-    //printf("\n");
-  }*/
-/*
+  }
+
   // second convolution
   int cols_out = N-K1-K2+2;
   int rows_out = out_send_counts[my_rank]/((int)cols_out);
@@ -183,15 +179,11 @@ for (int i = 0; i < rows[my_rank]; i++){
 
     for (ii=0; ii < K2; ii++){
     for (jj=0;jj < K2;jj++){
-      //printf("%f \n", matB[i+ii][k+kk]);
       temp += matB[i+ii][j+jj]*kernel2[ii][jj];
       }
-      //printf("\n");
     }
     output[i][j] = temp;
-    //printf("%f ", output[i][j]);
     }
-    //printf("\n");
   }
 
   // Gather the results
@@ -204,5 +196,5 @@ for (int i = 0; i < rows[my_rank]; i++){
                 MPI_FLOAT,
                 0,
                 MPI_COMM_WORLD);
-*/
+
 }
