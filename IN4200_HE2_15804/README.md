@@ -33,6 +33,7 @@ Git repository for Home Exam 2 in the course High Performance Computing (IN4200)
 - ```MPI_double_layer_convolution.cpp```: The parallel version of double convolution.
 
 
+### Compilation and execution
 
 The files can be compiled with ```make all``` in terminal. In the directory of the executable, the program can be run either by
 ```
