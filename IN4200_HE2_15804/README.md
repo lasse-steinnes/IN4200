@@ -45,7 +45,7 @@ where the dimensions of the input matrix (MxN) = (8x8) and kernels (K1xK1), (K2x
 mpirun -n [number of MPI processes] ./main.out [M] [N] [K1] [K2]
 ```
 
-The programs were compiled and executed on macOS Catalina (v. 10.15.7). Compilation relies on mpiCC, to access Open MPI.
+The programs were compiled and executed on macOS Catalina (v. 10.15.7). Compilation relies on mpiCC, to access Open MPI (v4.1.1).
 
 ### Links and packages
 
