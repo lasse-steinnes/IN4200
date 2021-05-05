@@ -1,5 +1,4 @@
-// header file for convolution
-#ifndef convolution_H
+#ifndef convolution_H // header file for convolution
 #define convolution_H
 
 // function for double convolution

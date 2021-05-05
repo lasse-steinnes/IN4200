@@ -1,5 +1,4 @@
-// header file helpers
-#include <stdio.h> // printf
+#include <stdio.h> // printf 
 #include <stdlib.h> // atoi
 
 #ifndef helper_functions_H
