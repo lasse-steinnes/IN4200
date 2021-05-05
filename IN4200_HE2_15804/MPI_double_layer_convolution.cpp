@@ -228,4 +228,12 @@ void MPI_double_layer_convolution(int M, int N, float **input, int K1,
                 MPI_FLOAT,
                 0,
                 MPI_COMM_WORLD);
+
+  // free memory
+  free(out_send_counts);
+  free(rows);
+  free(send_counts);
+  free(send_disp);
+  free(gather_disp);
+  free(sub_rows_B);
 }

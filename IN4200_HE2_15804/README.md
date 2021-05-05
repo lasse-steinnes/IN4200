@@ -14,6 +14,7 @@ Git repository for Home Exam 2 in the course High Performance Computing (IN4200)
 
 * The work division decides how the input matrix is scattered, and how the output matrix is gathered. Since MPI_Scatterv needs contiguous memory allocation, the 2D matrices are allocated contiguously. Thus, when scattering the input matrix, one must not send the row displacement, but the element displacement. Thus, the displacement in rows are multiplied with the correct number of columns.
 
+* Some print statements are commented out, but not deleted, to make it easier to understand how the code works, for those interested.
 
 ### Code: Description of Programmes
 - ```MPI_main.cpp```: Runs the other programmes and provide user options through terminal.
