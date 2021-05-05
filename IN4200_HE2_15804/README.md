@@ -2,7 +2,7 @@
 Git repository for Home Exam 2 in the course High Performance Computing (IN4200) at UiO.
 
 ### Main Overview
-* The programs in this repository aim at performing a double convolution of a given input matrix. Convolution is a often used in machine learning. More on that [here](https://anhreynolds.com/blogs/cnn.html). Also, see the problem description (PDF).
+* The programmes in this repository aim at performing a double convolution of a given input matrix. Convolution is a often used in machine learning. More on that [here](https://anhreynolds.com/blogs/cnn.html). Also, see the problem description (PDF).
 
 * The main challenge is to perform a double convolution with parallel processes and work division using MPI. MPI is here accesses through Open MPI - A High Performance Message Passing Library.
 
@@ -15,8 +15,8 @@ Git repository for Home Exam 2 in the course High Performance Computing (IN4200)
 * The work division decides how the input matrix is scattered, and how the output matrix is gathered. Since MPI_Scatterv needs contiguous memory allocation, the 2D matrices are allocated contiguously. Thus, when scattering the input matrix, one must not send the row displacement, but the element displacement. Thus, the displacement in rows are multiplied with the correct number of columns.
 
 
-### Code: Description of Programs
-- ```main.cpp```: Runs the other programs and provide user options through terminal.
+### Code: Description of Programmes
+- ```main.cpp```: Runs the other programmes and provide user options through terminal.
 
 - ```makefile```: Compiles cpp/c files with optimization flag -Ofast (compiler mpiCC).
 
@@ -35,7 +35,7 @@ Git repository for Home Exam 2 in the course High Performance Computing (IN4200)
 
 ### Compilation and Execution
 
-The files can be compiled with ```make all``` in terminal. In the directory of the executable, the program can be run either by
+The files can be compiled with ```make all``` in terminal. In the directory of the executable, the programme can be run either by
 ```
 mpirun -n [number of MPI processes] ./main.out
 ```
@@ -45,7 +45,7 @@ where the dimensions of the input matrix (MxN) = (8x8) and kernels (K1xK1), (K2x
 mpirun -n [number of MPI processes] ./main.out [M] [N] [K1] [K2]
 ```
 
-The programs were compiled and executed on macOS Catalina (v. 10.15.7). Compilation relies on mpiCC, to access Open MPI (v4.1.1).
+The programmes were compiled and executed on macOS Catalina (v. 10.15.7). Compilation relies on mpiCC, to access Open MPI (v4.1.1).
 
 ### Links and Packages
 
