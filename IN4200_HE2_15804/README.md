@@ -38,7 +38,7 @@ The files can be compiled with ```make all``` in terminal. In the directory of t
 ```
 mpirun -n 2 ./main.out
 ```
-where the dimensions of the input matrix (MxN) = (8x8) and kernels (K1xK1), (K2xK2) = (3x3) are predetermined. Another options is user provided dimension
+where the dimensions of the input matrix (MxN) = (8x8) and kernels (K1xK1), (K2xK2) = (3x3) are predetermined. Another option is user provided dimensions
 
 ```
 mpirun -n 2 ./main.out M N K1 K2
