@@ -41,7 +41,21 @@ int main(int nargs, char **args){
   }
 
   printf("\n");
+  printf("Number of rows available for work division: %d \n", (M-K1-K2+2));
   printf("Number of processes available for work: %d \n", procs);
+
+  if (procs >= (M-K1-K2+2)/((double) 2)){
+    printf("\n");
+    printf("OBS! Danger of inefficient work division, due to \n");
+    printf("low dimension:processes ratio \n\n");
+  }
+
+  if (procs > (M-K1-K2+2)){
+    printf("\n");
+    printf("Input Error! Rows (output matrix) : # processes ratio < 1.\n");
+    printf("Choose less processes\n\n");
+    return 1;
+    }
 
   // vals M,N,K1,K2;
   dims[0] = M; dims[1] = N;
@@ -56,7 +70,7 @@ int main(int nargs, char **args){
                                                           // collective communication
 
   // handle kernels in non-root processes, and allocate memory for workloads?
-  if (my_rank>0) {
+  if (my_rank> root) {
     // allocate memory for  the convolutional kernels in non-root processes
     alloc2dfloat(&kernel1, dims[2], dims[2]);  alloc2dfloat(&kernel2, dims[3], dims[3]);
   }
@@ -67,9 +81,21 @@ int main(int nargs, char **args){
   // broadcast content of kernels
   MPI_Bcast(&(kernel2[0][0]), dims[3]*dims[3], MPI_FLOAT, root, MPI_COMM_WORLD);
 
+
+  double start, end;
+  if (my_rank == root){
+    printf("Performing double layer convolution...\n");
+  }
+  start = MPI_Wtime();
+
   // parallel computation of double layer convolution
   MPI_double_layer_convolution(dims[0], dims[1], input, dims[2], kernel1,
   dims[3], kernel2, output);
+
+  end = MPI_Wtime();
+  if (my_rank == root){
+    printf("Double layer convolution finished \n");
+    }
 
   // print the output matrix and compare with serial
   if (my_rank == root){
@@ -84,10 +110,32 @@ int main(int nargs, char **args){
     double_layer_convolution(M, N, input, K1,
       kernel1, K2, kernel2, output_serial);
     mean_squared_error(output, output_serial,M-K1-K2+2,N-K1-K2+2);
+    free2dfloat(&output_serial);
+    printf("\n");
   }
 
-  free(input);
-  free(output);
+  // check that input and output matrix is NULL in non-root processes
+  // after function MPI double layer convolution is called
+  if (my_rank > root){
+    if (input != NULL || output != NULL){ // || is the same as or
+   printf("Error: Memory leakage in non-root processes! \n");
+   return 1;
+      }
+    }
+
+  // free memory
+  free2dfloat(&kernel1);
+  free2dfloat(&kernel2);
+
+  // free input and output memory from root
+  if (input != NULL & output != NULL){
+  free2dfloat(&input);
+  free2dfloat(&output);
+  };
+
+  MPI_Barrier(MPI_COMM_WORLD); // to get printf
+  printf("Double layer convolution took %.5e ms on process %d \n", (end-start)/((double)1000.0), my_rank);
+
   MPI_Finalize();
 
   return 0;
