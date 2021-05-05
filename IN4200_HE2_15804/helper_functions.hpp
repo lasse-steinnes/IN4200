@@ -15,27 +15,47 @@ using namespace std;
 /*--------------------------------------------------------------------------*/
 
 void alloc2dfloat(float ***mat, int m, int n) {
-    /* allocate n*m contiguous slots */
+  /* Allocates a 2D matrix contiguosly in memory
+
+  Input:
+  - mat: matrix for which memory is to be allocated
+  - m: rows
+  - n: columns
+  */
+
     float *p = (float *)malloc((m*n) * sizeof(float));
-
-    /* allocate the row pointers into the memory */
+    // allocate the row pointers into the memory
     (*mat) = (float **)malloc(m * sizeof(float*));
-
-    /* set up the pointers into the contiguous memory */
+    // set up the pointers into the contiguous memory
     for (int i=0; i<m; i++){
        (*mat)[i] = &(p[i*n]);
      }
 }
 
 void free2dfloat(float ***mat){
-    /* free the memory - the first element  */
-    free(&((*mat)[0][0]));
+    /* frees memory from a 2D matrix contiguosly allocated
 
-    /* free the pointers in mem */
+    Input:
+    - mat: Matrix whose memory should be freed
+    */
+
+    // free the memory, access first element
+    free(&((*mat)[0][0]));
+    /* free the pointers in memory */
     free(*mat);
 }
 
 void mean_squared_error(float ** mat1, float** mat2, int rows, int cols){
+  /* Calculates the mean squared error between elements of two matrices
+
+  Input:
+  - mat1: Matrix of dimensions rows x cols
+  - mat2: Matrix of dimensions rows x cols
+  - rows: Rows in matrices
+  - cols: Columns in matrices
+  */
+
+
   double error = 0;
   double fac = 1/((double) rows*cols);
   for (size_t i = 0; i < rows; i++) {
@@ -50,6 +70,19 @@ void mean_squared_error(float ** mat1, float** mat2, int rows, int cols){
 
 void double_layer_convolution(int M, int N, float **input, int K1,
   float **kernel1, int K2, float **kernel2, float **output){
+    /* Serial compuation of double layer convolution
+
+    Input:
+    - M: Number of rows in input matrix.
+    - N: Number of columns in input matrix.
+    - input: 2D input matrix.
+    - K1: Dim of kernel1 (K1xK1)
+    - kernel1: 2D kernel matrix for first convolution
+    - K2: Dim of kernel2 (K2xK2)
+    - kernel2: 2D kernel matrix for second convolution
+    - output: Output matrix after two convolutions
+    */
+
   int i,j,ii,jj;
   float temp;
 
@@ -91,13 +124,27 @@ void double_layer_convolution(int M, int N, float **input, int K1,
 }
 
 void allocate_and_initiate(int M, int N,float ***input, int K1, float ***kernel1,
-                        int K2, float ***kernel2,float***output){ // witht deallocation
+                        int K2, float ***kernel2, float***output){
+  /* Allocates 2D matrices with contiguous memory allocation
 
-  // allocate 2D matrices with contiguous memory allocation
+  Input:
+  - M: Number of rows in input matrix.
+  - N: Number of columns in input matrix.
+  - input: 2D input matrix.
+  - K1: Dim of kernel1 (K1xK1)
+  - kernel1: 2D kernel matrix for first convolution
+  - K2: Dim of kernel2 (K2xK2)
+  - kernel2: 2D kernel matrix for second convolution
+  - output: Output matrix after two convolutions
+  */
+
+  // -----------------------------------------
+   // allocate memory and objects
+  // -----------------------------------------
   // inputrix to be convoluted
   alloc2dfloat(&(*input), M,N);
 
-  // allocate the output inputrix M-K+1 x N-K+1 or M-K1-K2+2 x N-K1-K2 + 2 (double)
+  // allocate the output input matrix M-K1-K2+2 x N-K1-K2 + 2
   alloc2dfloat(&(*output),M-K1-K2+2,N-K1-K2+2);
 
   // kernel1
@@ -106,7 +153,13 @@ void allocate_and_initiate(int M, int N,float ***input, int K1, float ***kernel1
   // kernel2
   alloc2dfloat(&(*kernel2), K2,K2);
 
+  // -----------------------------------------
+   // initiating to some values
+  // -----------------------------------------
+  //
+
   // assign variables to the inputrix
+  // same values as in problem description example
   for (int i = 0; i < M; i++){
     for (int j = 0; j < N; j++){
       (*input)[i][j] = 0.0f; //((float)i) +
@@ -128,6 +181,7 @@ void allocate_and_initiate(int M, int N,float ***input, int K1, float ***kernel1
   }
 
   // assign variables to the kernels
+  // vertical edge detection
   for (int i = 0; i < K1; i++){
     for (int j = 0; j < K1; j++){
       if (j == 0){
@@ -156,6 +210,14 @@ void allocate_and_initiate(int M, int N,float ***input, int K1, float ***kernel1
 }
 
 void print_matrix(float **mat,int rows,int cols){
+  /* Print a 2D matrix
+
+  Input:
+  - mat: 2D matrix matrix of dims rows x column
+  - rows: rows
+  - cols: columns
+  */
+
   printf("\n");
   printf("Resulting matrix \n");
   for (int i = 0; i < rows; i++){

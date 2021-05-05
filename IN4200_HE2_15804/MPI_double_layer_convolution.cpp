@@ -95,6 +95,18 @@ sub_rows_B = K2 + 1*(sub_rows_out + check_remaind - 1);
 
 void MPI_double_layer_convolution(int M, int N, float **input, int K1,
   float **kernel1, int K2, float **kernel2, float **output){
+    /* Parallel computation of double layer convolution
+
+    Input:
+    - M: Number of rows in input matrix.
+    - N: Number of columns in input matrix.
+    - input: 2D input matrix.
+    - K1: Dim of kernel1 (K1xK1)
+    - kernel1: 2D kernel matrix for first convolution
+    - K2: Dim of kernel2 (K2xK2)
+    - kernel2: 2D kernel matrix for second convolution
+    - output: Output matrix after two convolutions
+    */
 
   int procs, my_rank;
   MPI_Comm_size(MPI_COMM_WORLD, &procs); // get number of processes
@@ -139,7 +151,6 @@ void MPI_double_layer_convolution(int M, int N, float **input, int K1,
 //          Do Local Calculations
 //-----------------------------------------
 
-
   // first convolution
   float temp;
   int i, j, ii, jj;
@@ -171,6 +182,8 @@ void MPI_double_layer_convolution(int M, int N, float **input, int K1,
     output[i][j] = temp;
     }
   }
+
+//-----------------------------------------
 
   // free the memory
   free(&(matB[0][0]));
