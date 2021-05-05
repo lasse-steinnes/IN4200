@@ -16,7 +16,7 @@ Git repository for Home Exam 2 in the course High Performance Computing (IN4200)
 
 
 ### Code: Description of Programmes
-- ```main.cpp```: Runs the other programmes and provide user options through terminal.
+- ```MPI_main.cpp```: Runs the other programmes and provide user options through terminal.
 
 - ```makefile```: Compiles cpp/c files with optimization flag -Ofast (compiler mpiCC).
 
