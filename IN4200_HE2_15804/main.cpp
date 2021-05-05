@@ -34,20 +34,23 @@ int main(int nargs, char **args){
     M = atoi(args[1]); N = atoi(args[2]);
     K1 = atoi(args[3]); K2 = atoi(args[4]);
     if (K1 > N || K2 > N-K1+1 ){ // || is the same as or
+     printf("\n");
      printf("Error: Dimensions not suitable for double convolution! \n");
-     printf("Exiting programme");
+     printf("Exiting programme \n");
      return 1;
       }
   }
 
   printf("\n");
+  printf("--------------------------------------------- \n");
   printf("Number of rows available for work division: %d \n", (M-K1-K2+2));
   printf("Number of processes available for work: %d \n", procs);
+  printf("--------------------------------------------- \n");
 
   if (procs >= (M-K1-K2+2)/((double) 2)){
     printf("\n");
     printf("OBS! Danger of inefficient work division, due to \n");
-    printf("low dimension:processes ratio \n\n");
+    printf("low dimension:processes ratio: %.1f \n\n", (M-K1-K2+2)/((double) procs));
   }
 
   if (procs > (M-K1-K2+2)){
@@ -84,6 +87,7 @@ int main(int nargs, char **args){
 
   double start, end;
   if (my_rank == root){
+    printf("--------------------------------------------- \n");
     printf("Performing double layer convolution...\n");
   }
   start = MPI_Wtime();
@@ -94,12 +98,13 @@ int main(int nargs, char **args){
 
   end = MPI_Wtime();
   if (my_rank == root){
-    printf("Double layer convolution finished \n");
+    printf("Double layer convolution finished! \n");
     }
 
   // print the output matrix and compare with serial
   if (my_rank == root){
     //print matrix
+    printf("--------------------------------------------- \n");
     if (N < 10){
     print_matrix(output,M-K1-K2+2,N-K1-K2+2);
     }
@@ -112,14 +117,15 @@ int main(int nargs, char **args){
     mean_squared_error(output, output_serial,M-K1-K2+2,N-K1-K2+2);
     free2dfloat(&output_serial);
     printf("\n");
+    printf("--------------------------------------------- \n");
   }
 
   // check that input and output matrix is NULL in non-root processes
   // after function MPI double layer convolution is called
   if (my_rank > root){
     if (input != NULL || output != NULL){ // || is the same as or
-   printf("Error: Memory leakage in non-root processes! \n");
-   return 1;
+      printf("Error: Memory leakage in non-root processes! \n");
+      return 1;
       }
     }
 
@@ -133,10 +139,9 @@ int main(int nargs, char **args){
   free2dfloat(&output);
   };
 
-  MPI_Barrier(MPI_COMM_WORLD); // to get printf
+  MPI_Barrier(MPI_COMM_WORLD); // to get printf together
   printf("Double layer convolution took %.5e ms on process %d \n", (end-start)/((double)1000.0), my_rank);
 
-  MPI_Finalize();
-
+  MPI_Finalize(); // end paralell region
   return 0;
 }
