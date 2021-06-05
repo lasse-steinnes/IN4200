@@ -16,7 +16,7 @@ Git repository for Home Exam 2 in the course High Performance Computing (IN4200)
 
 * Some print statements are commented out, but not deleted, to make it easier to understand how the code works, for those interested.
 
-### Comment
+### Comments
 There are at least a couple of ways to optimize memory usage in the current version
 
 * Reuse local input matrix for local output matrix.
