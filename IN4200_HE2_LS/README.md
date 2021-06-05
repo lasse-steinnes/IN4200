@@ -16,6 +16,15 @@ Git repository for Home Exam 2 in the course High Performance Computing (IN4200)
 
 * Some print statements are commented out, but not deleted, to make it easier to understand how the code works, for those interested.
 
+### Comment
+There are at least a couple of ways to optimize memory usage in the current version
+
+* Reuse local input matrix for local output matrix.
+
+* Use count 0 for master process (root) when scattering and gathering data. Computation on master: Master process (rank) already has access, and we only need to give it the correct work division (domain decomposition).
+
+* See also the home exam dissection slides.
+
 ### Code: Description of Programmes
 - ```MPI_main.cpp```: Runs the other programmes and provide user options through terminal.
 
